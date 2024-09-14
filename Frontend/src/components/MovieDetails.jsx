@@ -1,25 +1,40 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { 
   Typography, Card, CardContent, CardMedia, Chip, Button, Box,
   List, ListItem, ListItemText, Divider, Rating
 } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchMovie, clearCurrentMovie } from '../redux/movieSlice';
 
 const MovieDetails = () => {
   const { id } = useParams();
-  const movie = useSelector((state) => 
-    state.movies.list.find(m => m.id === parseInt(id))
-  );
+  const dispatch = useDispatch();
 
+  // Fetch the current movie from the store
+  const movie = useSelector((state) => state.movies.currentMovie);
+  const loading = useSelector((state) => state.movies.loading);
+  const error = useSelector((state) => state.movies.error);
+
+  // Fetch movie details when the component mounts
+  useEffect(() => {
+    dispatch(fetchMovie(id)); // Fetch the movie details by ID
+
+    // Clear the current movie when the component unmounts
+    return () => {
+      dispatch(clearCurrentMovie());
+    };
+  }, [dispatch, id]);
+
+  if (loading) return <Typography>Loading...</Typography>;
+  if (error) return <Typography color="error">{error}</Typography>;
   if (!movie) return <Typography>Movie not found</Typography>;
 
   return (
     <Card>
       <CardMedia
         component="img"
-        height="400"
-        image={movie.images.cover}
+        image={movie.images.cover} // Assuming movie.images.cover exists
         alt={movie.title}
         sx={{ objectFit: 'cover' }}
       />
@@ -52,7 +67,7 @@ const MovieDetails = () => {
           variant="contained" 
           color="primary" 
           component={Link} 
-          to={`/book/${movie.id}`}
+          to={`/book/${movie._id}`} // Using movie._id for navigation
           sx={{ mt: 2 }}
         >
           Book Ticket

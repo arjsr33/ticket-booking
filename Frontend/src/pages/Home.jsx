@@ -26,7 +26,7 @@ const Home = () => {
   };
 
   if (loading) return <Typography>Loading...</Typography>;
-  if (error) return <Typography>Error: {error}</Typography>;
+  if (error) return <Typography color="error">Error: {error}</Typography>;
 
   return (
     <Container maxWidth="lg">
@@ -40,7 +40,7 @@ const Home = () => {
       </Box>
       <Grid container spacing={4}>
         {movies.map((movie) => (
-          <Grid item key={movie.id} xs={12} sm={6} md={4}>
+          <Grid item key={movie._id} xs={12} sm={6} md={4}>
             <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
               <CardMedia
                 component="img"
@@ -57,10 +57,10 @@ const Home = () => {
                 </Typography>
               </CardContent>
               <CardActions>
-                <Button size="small" onClick={() => handleBooking(movie.id)}>
+                <Button size="small" onClick={() => handleBooking(movie._id)}>
                   Book Now
                 </Button>
-                <Button size="small" onClick={() => navigate(`/movie/${movie.id}`)}>
+                <Button size="small" onClick={() => navigate(`/movie/${movie._id}`)}>
                   Learn More
                 </Button>
               </CardActions>

@@ -1,23 +1,22 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { Container, TextField, Button, Typography, Box, Alert } from '@mui/material';
 import { signupUser } from '../redux/userSlice';
+import { TextField, Button, Typography, Container, Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, error } = useSelector((state) => state.user);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const resultAction = await dispatch(signupUser({ name, email, password, phoneNumber }));
+    const resultAction = await dispatch(signupUser({ name, email, password }));
     if (signupUser.fulfilled.match(resultAction)) {
-      navigate('/dashboard');
+      navigate('/');
     }
   };
 
@@ -27,7 +26,7 @@ const Signup = () => {
         <Typography component="h1" variant="h5">
           Sign Up
         </Typography>
-        {error && <Alert severity="error">{error}</Alert>}
+        {error && <Typography color="error">{error}</Typography>}
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextField
             margin="normal"
@@ -63,18 +62,6 @@ const Signup = () => {
             autoComplete="new-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="phoneNumber"
-            label="Phone Number"
-            type="tel"
-            id="phoneNumber"
-            autoComplete="tel"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
           />
           <Button
             type="submit"

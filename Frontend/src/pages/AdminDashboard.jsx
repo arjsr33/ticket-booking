@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom'; 
 import { 
   Container, Typography, Box, Button, Table, TableBody, TableCell, 
   TableContainer, TableHead, TableRow, Paper, Dialog, DialogTitle, 
   DialogContent, DialogActions, TextField, Rating
 } from '@mui/material';
-import { fetchMovies, addMovie, updateMovie, deleteMovie } from '../redux/movieSlice';
+import { fetchMovies, addMovie, editMovie, removeMovie } from '../redux/movieSlice';
 
 const AdminDashboard = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate(); 
   const { list: movies, loading, error } = useSelector((state) => state.movies);
   const [open, setOpen] = useState(false);
   const [currentMovie, setCurrentMovie] = useState(null);
@@ -61,7 +63,7 @@ const AdminDashboard = () => {
       cast: movieData.cast.split(',').map(item => item.trim())
     };
     if (currentMovie) {
-      dispatch(updateMovie({ id: currentMovie.id, movieData: moviePayload }));
+      dispatch(editMovie({ id: currentMovie.id, movieData: moviePayload }));
     } else {
       dispatch(addMovie(moviePayload));
     }
@@ -70,7 +72,7 @@ const AdminDashboard = () => {
 
   const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to delete this movie?')) {
-      dispatch(deleteMovie(id));
+      dispatch(removeMovie(id));
     }
   };
 
@@ -83,6 +85,12 @@ const AdminDashboard = () => {
         <Typography variant="h4" gutterBottom>Movie Management</Typography>
         <Button variant="contained" color="primary" onClick={() => handleOpen()}>
           Add New Movie
+        </Button>
+        <Button variant="contained" color="secondary" onClick={() => navigate('/admin/users')}>
+          Manage Users
+        </Button>
+        <Button variant="contained" color="secondary" onClick={() => navigate('/admin/bookings')}>
+          Manage Bookings
         </Button>
       </Box>
       <TableContainer component={Paper}>

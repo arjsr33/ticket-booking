@@ -1,48 +1,51 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import { Provider } from 'react-redux';
-import { store } from './redux/store';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { CssBaseline, Container, Box } from '@mui/material';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import CustomerDashboard from './pages/CustomerDashboard';
 import MovieDetails from './components/MovieDetails';
 import TicketBooking from './components/TicketBooking';
-import UserProfile from './pages/UserProfile';
 import AdminDashboard from './pages/AdminDashboard';
+import CustomerDashboard from './pages/CustomerDashboard';
+import UserProfile from './pages/UserProfile';
 import ProtectedRoute from './components/ProtectedRoute';
-
-const theme = createTheme();
+import UserList from './pages/UserList';
+import BookingList from './pages/BookingList';
 
 function App() {
   return (
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Router>
-          <Navbar />
+    <Router>
+      <CssBaseline />
+      <Navbar />
+      <Container>
+        <Box sx={{ mt: 4 }}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/movie/:id" element={<MovieDetails />} />
-            
-            <Route element={<ProtectedRoute />}>
-              <Route path="/dashboard" element={<CustomerDashboard />} />
-              <Route path="/book/:id" element={<TicketBooking />} />
-              <Route path="/profile" element={<UserProfile />} />
+            <Route path="/book/:id" element={<TicketBooking />} />
+            <Route path="/dashboard" element={<ProtectedRoute />}>
+              <Route index element={<CustomerDashboard />} />
             </Route>
-            
-            <Route element={<ProtectedRoute adminOnly />}>
-              <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin" element={<ProtectedRoute adminOnly />}>
+              <Route index element={<AdminDashboard />} />
+            </Route>
+            <Route path="/admin/users" element={<ProtectedRoute adminOnly />}>
+              <Route index element={<UserList />} />
+            </Route>
+            <Route path="/admin/bookings" element={<ProtectedRoute adminOnly />}>
+              <Route index element={<BookingList />} />
+            </Route>
+            <Route path="/profile" element={<ProtectedRoute />}>
+              <Route index element={<UserProfile />} />
             </Route>
           </Routes>
-        </Router>
-      </ThemeProvider>
-    </Provider>
+        </Box>
+      </Container>
+    </Router>
   );
 }
 

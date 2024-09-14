@@ -1,25 +1,37 @@
-import React from 'react';
-import { Grid, Card, CardContent, CardMedia, Typography, Chip } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Card, CardContent, Typography, Grid } from '@mui/material';
+import { getMovies } from '../services/api';
 
-const MovieList = ({ movies }) => {
+const MovieList = () => {
+  const [movies, setMovies] = useState([]);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const movieData = await getMovies();
+        setMovies(movieData);
+      } catch (error) {
+        setError('Failed to load movies');
+      }
+    };
+    fetchMovies();
+  }, []);
+
+  if (error) {
+    return <Typography color="error">{error}</Typography>;
+  }
+
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={4}>
       {movies.map((movie) => (
-        <Grid item xs={12} sm={6} md={4} key={movie.id}>
-          <Card component={Link} to={`/movie/${movie.id}`} sx={{ textDecoration: 'none' }}>
-            <CardMedia
-              component="img"
-              height="300"
-              image={movie.image}
-              alt={movie.title}
-            />
+        <Grid item key={movie.id} xs={12} sm={6} md={4}>
+          <Card>
             <CardContent>
-              <Typography gutterBottom variant="h6" component="div">
-                {movie.title}
-              </Typography>
-              <Chip label={movie.category} size="small" sx={{ mr: 1 }} />
-              <Chip label={movie.language} size="small" />
+              <Typography variant="h5">{movie.title}</Typography>
+              <Typography variant="body2">{movie.description}</Typography>
+              <Link to={`/movies/${movie.id}`}>View Details</Link>
             </CardContent>
           </Card>
         </Grid>

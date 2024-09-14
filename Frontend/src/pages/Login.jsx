@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { Container, TextField, Button, Typography, Box, Alert } from '@mui/material';
 import { loginUser } from '../redux/userSlice';
+import { TextField, Button, Typography, Container, Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -15,7 +15,7 @@ const Login = () => {
     e.preventDefault();
     const resultAction = await dispatch(loginUser({ email, password }));
     if (loginUser.fulfilled.match(resultAction)) {
-      navigate('/dashboard');
+      navigate('/');
     }
   };
 
@@ -25,7 +25,7 @@ const Login = () => {
         <Typography component="h1" variant="h5">
           Login
         </Typography>
-        {error && <Alert severity="error">{error}</Alert>}
+        {error && <Typography color="error">{error}</Typography>}
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextField
             margin="normal"

@@ -1,97 +1,48 @@
-import { mockMovies, mockUsers } from './mockData';
+import axios from 'axios';
 
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+const API_URL = '/api'; // This will use the proxy set up in vite.config.js
 
-export const api = {
-  login: async (credentials) => {
-    await delay(500); // Simulate network delay
-    const user = mockUsers.find(u => u.email === credentials.email);
-    if (user && credentials.password === 'password') { // Simple password check
-      const { password, ...userWithoutPassword } = user;
-      return userWithoutPassword;
+const api = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Request interceptor for API calls
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers['x-auth-token'] = token;
     }
-    throw new Error('Invalid credentials');
+    return config;
   },
-
-  signup: async (userData) => {
-    await delay(500);
-    const newUser = { 
-      ...userData, 
-      id: Math.max(...mockUsers.map(u => u.id)) + 1,
-      role: 'user',
-      bookings: []
-    };
-    mockUsers.push(newUser);
-    const { password, ...userWithoutPassword } = newUser;
-    return userWithoutPassword;
-  },
-
-  getMovies: async () => {
-    await delay(500);
-    return mockMovies;
-  },
-
-  getMovie: async (id) => {
-    await delay(300);
-    const movie = mockMovies.find(m => m.id === id);
-    if (!movie) throw new Error('Movie not found');
-    return movie;
-  },
-
-  addMovie: async (movieData) => {
-    await delay(500);
-    const newMovie = { 
-      ...movieData, 
-      id: Math.max(...mockMovies.map(m => m.id)) + 1,
-      reviews: [],
-      rating: 0
-    };
-    mockMovies.push(newMovie);
-    return newMovie;
-  },
-
-  updateMovie: async (id, movieData) => {
-    await delay(500);
-    const index = mockMovies.findIndex(movie => movie.id === id);
-    if (index !== -1) {
-      mockMovies[index] = { ...mockMovies[index], ...movieData };
-      return mockMovies[index];
-    }
-    throw new Error('Movie not found');
-  },
-
-  deleteMovie: async (id) => {
-    await delay(500);
-    const index = mockMovies.findIndex(movie => movie.id === id);
-    if (index !== -1) {
-      mockMovies.splice(index, 1);
-      return true;
-    }
-    throw new Error('Movie not found');
-  },
-
-  bookTicket: async (userId, movieId, seats, date) => {
-    await delay(500);
-    const user = mockUsers.find(u => u.id === userId);
-    if (!user) throw new Error('User not found');
-    
-    const booking = {
-      id: Math.max(...user.bookings.map(b => b.id), 0) + 1,
-      movieId,
-      date,
-      seats
-    };
-    user.bookings.push(booking);
-    return booking;
-  },
-
-  getUserBookings: async (userId) => {
-    await delay(500);
-    const user = mockUsers.find(u => u.id === userId);
-    if (!user) throw new Error('User not found');
-    return user.bookings.map(booking => ({
-      ...booking,
-      movie: mockMovies.find(m => m.id === booking.movieId)
-    }));
+  (error) => {
+    return Promise.reject(error);
   }
-};
+);
+
+// User routes
+export const signup = (userData) => api.post('/users/signup', userData);
+export const login = (credentials) => api.post('/users/login', credentials);
+export const getUsers = () => api.get('/users');
+export const getUser = (id) => api.get(`/users/${id}`);
+export const updateUser = (id, userData) => api.patch(`/users/${id}`, userData);
+export const deleteUser = (id) => api.delete(`/users/${id}`);
+
+// Movie routes
+export const getMovies = () => api.get('/movies');
+export const getMovie = (id) => api.get(`/movies/${id}`);
+export const createMovie = (movieData) => api.post('/movies', movieData);
+export const updateMovie = (id, movieData) => api.patch(`/movies/${id}`, movieData);
+export const deleteMovie = (id) => api.delete(`/movies/${id}`);
+
+// Booking routes
+export const createBooking = (bookingData) => api.post('/bookings', bookingData);
+export const getUserBookings = () => api.get('/bookings/user');
+export const cancelBooking = (id) => api.patch(`/bookings/${id}/cancel`);
+export const getAllBookings = () => api.get('/bookings');
+export const deleteBooking = (id) => api.delete(`/bookings/${id}`);
+
+export default api;

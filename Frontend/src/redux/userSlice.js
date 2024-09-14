@@ -1,45 +1,56 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { api } from '../services/api';
+import { login, signup, getUser, updateUser } from '../services/api';
 
-// Async thunk for user login
+// Thunk to handle user login
 export const loginUser = createAsyncThunk(
   'user/login',
   async (credentials, { rejectWithValue }) => {
     try {
-      const user = await api.login(credentials);
-      return user;
+      const response = await login(credentials);
+      localStorage.setItem('token', response.data.token);
+      return response.data; // User data returned from API
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error.response ? error.response.data : error.message);
     }
   }
 );
 
-// Async thunk for user signup
+// Thunk to handle user signup
 export const signupUser = createAsyncThunk(
   'user/signup',
   async (userData, { rejectWithValue }) => {
     try {
-      const user = await api.signup(userData);
-      return user;
+      const response = await signup(userData);
+      localStorage.setItem('token', response.data.token);
+      return response.data; // User data returned from API
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error.response ? error.response.data : error.message);
     }
   }
 );
 
-// Async thunk for fetching user profile
+// Thunk to fetch the current user's profile
 export const fetchUserProfile = createAsyncThunk(
-  'user/fetchProfile',
-  async (_, { getState, rejectWithValue }) => {
+  'user/fetchUserProfile',
+  async (_, { rejectWithValue }) => {
     try {
-      const { user } = getState();
-      if (!user.isAuthenticated) {
-        throw new Error('User not authenticated');
-      }
-      const profile = await api.getUserProfile(user.currentUser.id);
-      return profile;
+      const response = await getUser();
+      return response.data; // Return the user's profile data
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error.response ? error.response.data : error.message);
+    }
+  }
+);
+
+// Thunk to update the user's profile
+export const updateUserProfile = createAsyncThunk(
+  'user/updateUserProfile',
+  async (userData, { rejectWithValue }) => {
+    try {
+      const response = await updateUser(userData);
+      return response.data; // Return the updated user data
+    } catch (error) {
+      return rejectWithValue(error.response ? error.response.data : error.message);
     }
   }
 );
@@ -49,26 +60,24 @@ const userSlice = createSlice({
   initialState: {
     currentUser: null,
     isAuthenticated: false,
-    isAdmin: false,
     loading: false,
     error: null,
-    profile: null,
   },
   reducers: {
+    // Reducer to handle user logout
     logout: (state) => {
       state.currentUser = null;
       state.isAuthenticated = false;
-      state.isAdmin = false;
-      state.profile = null;
-      state.error = null;
+      localStorage.removeItem('token'); // Remove token from local storage
     },
+    // Reducer to clear error state
     clearError: (state) => {
       state.error = null;
     },
   },
   extraReducers: (builder) => {
     builder
-      // Login cases
+      // Handle login
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -76,14 +85,13 @@ const userSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.currentUser = action.payload;
         state.isAuthenticated = true;
-        state.isAdmin = action.payload.role === 'admin';
         state.loading = false;
       })
       .addCase(loginUser.rejected, (state, action) => {
-        state.error = action.payload;
+        state.error = action.payload.message;
         state.loading = false;
       })
-      // Signup cases
+      // Handle signup
       .addCase(signupUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -91,29 +99,41 @@ const userSlice = createSlice({
       .addCase(signupUser.fulfilled, (state, action) => {
         state.currentUser = action.payload;
         state.isAuthenticated = true;
-        state.isAdmin = false; // New users are not admins by default
         state.loading = false;
       })
       .addCase(signupUser.rejected, (state, action) => {
-        state.error = action.payload;
+        state.error = action.payload.message;
         state.loading = false;
       })
-      // Fetch user profile cases
+      // Handle fetching user profile
       .addCase(fetchUserProfile.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(fetchUserProfile.fulfilled, (state, action) => {
-        state.profile = action.payload;
+        state.currentUser = action.payload;
+        state.isAuthenticated = true;
         state.loading = false;
       })
       .addCase(fetchUserProfile.rejected, (state, action) => {
-        state.error = action.payload;
+        state.error = action.payload.message;
+        state.loading = false;
+      })
+      // Handle updating user profile
+      .addCase(updateUserProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateUserProfile.fulfilled, (state, action) => {
+        state.currentUser = action.payload;
+        state.loading = false;
+      })
+      .addCase(updateUserProfile.rejected, (state, action) => {
+        state.error = action.payload.message;
         state.loading = false;
       });
   },
 });
 
 export const { logout, clearError } = userSlice.actions;
-
 export default userSlice.reducer;
