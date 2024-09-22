@@ -1,23 +1,24 @@
 const nodemailer = require('nodemailer');
 
-// Create a transporter using SMTP
 const transporter = nodemailer.createTransport({
-  host: "smtp.mail.yahoo.com",
+  host: 'smtp.gmail.com',
   port: 587,
-  secure: false,
+  secure: false, 
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
+    pass: process.env.EMAIL_PASS 
+  }
 });
 
 const sendBookingConfirmationEmail = async (userEmail, bookingDetails) => {
   const { movieTitle, seats, date, time, totalPrice } = bookingDetails;
 
   try {
-    // Send mail with defined transport object
+    console.log('Attempting to send email to:', userEmail);
+    console.log('Using email:', process.env.EMAIL_USER);
+
     let info = await transporter.sendMail({
-      from: '"Your Cinema" <bookings@yourcinema.com>',
+      from: `"Your Cinema" <${process.env.EMAIL_USER}>`,
       to: userEmail,
       subject: "Booking Confirmation",
       text: `Thank you for your booking!\n\nMovie: ${movieTitle}\nSeats: ${seats.join(', ')}\nDate: ${date}\nTime: ${time}\nTotal Price: ₹${totalPrice}\n\nPlease arrive one hour early to make the payment and confirm your booking.`,
@@ -28,6 +29,9 @@ const sendBookingConfirmationEmail = async (userEmail, bookingDetails) => {
     return true;
   } catch (error) {
     console.error('Error sending email:', error);
+    if (error.response) {
+      console.error('SMTP Response:', error.response);
+    }
     return false;
   }
 };

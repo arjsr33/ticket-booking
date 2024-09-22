@@ -53,20 +53,25 @@ const TicketBooking = () => {
     if (bookingConfirmed) {
       const sendEmail = async () => {
         try {
-          await sendBookingConfirmation({
+          const response = await sendBookingConfirmation({
             movieTitle: movie.title,
             seats: selectedSeats,
             date: selectedDate,
             time: selectedTime,
             totalPrice: selectedSeats.length * 100
           });
+          console.log('Email confirmation response:', response);
           setEmailStatus('success');
         } catch (error) {
           console.error('Failed to send confirmation email:', error);
+          if (error.response) {
+            console.error('Error response:', error.response.data);
+            console.error('Error status:', error.response.status);
+          }
           setEmailStatus('error');
         }
       };
-
+  
       sendEmail();
     }
   }, [bookingConfirmed, movie, selectedSeats, selectedDate, selectedTime]);

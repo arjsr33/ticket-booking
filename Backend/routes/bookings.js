@@ -120,7 +120,10 @@ router.delete('/:id', auth, async (req, res) => {
 router.post('/send-confirmation', auth, async (req, res) => {
   try {
     const { movieTitle, seats, date, time, totalPrice } = req.body;
-    const userEmail = req.user.email; // Assuming you have the user's email from auth middleware
+    const userEmail = req.user.email;
+
+    console.log('Attempting to send email to:', userEmail);
+    console.log('Booking details:', { movieTitle, seats, date, time, totalPrice });
 
     const emailSent = await sendBookingConfirmationEmail(userEmail, {
       movieTitle,
@@ -131,13 +134,19 @@ router.post('/send-confirmation', auth, async (req, res) => {
     });
 
     if (emailSent) {
+      console.log('Email sent successfully');
       res.status(200).json({ message: 'Confirmation email sent successfully' });
     } else {
+      console.error('Failed to send email');
       res.status(500).json({ message: 'Failed to send confirmation email' });
     }
   } catch (error) {
     console.error('Error in send-confirmation route:', error);
-    res.status(500).json({ message: 'Server error while sending confirmation email' });
+    res.status(500).json({ 
+      message: 'Server error while sending confirmation email', 
+      error: error.message,
+      stack: error.stack
+    });
   }
 });
 
