@@ -126,7 +126,6 @@ router.post('/send-confirmation', auth, async (req, res) => {
     console.log('Auth user email:', authUserEmail);
     console.log('Email from request body:', userEmail);
 
-    // Prefer the email from auth, but fall back to the one from the request body
     const emailToUse = authUserEmail || userEmail;
 
     if (!emailToUse) {

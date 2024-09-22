@@ -60,7 +60,7 @@ const TicketBooking = () => {
             date: selectedDate,
             time: selectedTime,
             totalPrice: selectedSeats.length * 100,
-            userEmail: user.email // Include user's email
+            userEmail: user.email 
           });
           console.log('Email confirmation response:', response);
           setEmailStatus('success');
@@ -119,7 +119,7 @@ const TicketBooking = () => {
 
   const handleCloseConfirmation = () => {
     setOpenConfirmation(false);
-    dispatch(fetchUserBookings()); // Refetch bookings before navigating
+    dispatch(fetchUserBookings()); 
     navigate('/profile');
   };
 
