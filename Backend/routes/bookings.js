@@ -118,6 +118,7 @@ router.delete('/:id', auth, async (req, res) => {
 });
 // Route to send booking confirmation
 router.post('/send-confirmation', auth, async (req, res) => {
+  console.log('User from auth middleware:', req.user);
   try {
     const { movieTitle, seats, date, time, totalPrice, userEmail } = req.body;
     const authUserEmail = req.user.email;
