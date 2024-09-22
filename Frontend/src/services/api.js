@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-const API_URL = '/api'; // This will use the proxy set up in vite.config.js
-
+const API_URL = 'https://chadnimovies.vercel.app/api'
 const api = axios.create({
   baseURL: API_URL,
   headers: {
