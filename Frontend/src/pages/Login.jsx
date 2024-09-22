@@ -14,8 +14,22 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const resultAction = await dispatch(loginUser({ email, password }));
+    
     if (loginUser.fulfilled.match(resultAction)) {
-      navigate('/');
+      const userData = resultAction.payload;
+      console.log("Login successful, user data:", userData);
+
+      if (userData.user && userData.user.role) {
+        if (userData.user.role === 'admin') {
+          navigate('/admin');
+        } else {
+          navigate('/dashboard');
+        }
+      } else {
+        console.error("User role is undefined", userData);
+      }
+    } else if (loginUser.rejected.match(resultAction)) {
+      console.error("Login failed:", resultAction.payload);
     }
   };
 

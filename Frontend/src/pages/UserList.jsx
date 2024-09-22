@@ -42,7 +42,10 @@ const UserList = () => {
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.role}</TableCell>
                   <TableCell>
-                    <Button color="secondary" onClick={() => handleDelete(user._id)}>Delete</Button>
+                    <Button color="secondary" onClick={() => handleDelete(user._id)}
+                          disabled={user.role === 'admin'}>
+                            Delete
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}

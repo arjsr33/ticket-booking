@@ -1,27 +1,36 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { 
   Container, Typography, Grid, Card, CardContent, CardMedia, 
-  CardActionArea 
+  CardActionArea, CircularProgress 
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { fetchMovies } from '../redux/movieSlice';
 
 const CustomerDashboard = () => {
-  const movies = useSelector((state) => state.movies.list);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { list: movies, loading, error } = useSelector((state) => state.movies);
+
+  useEffect(() => {
+    dispatch(fetchMovies());
+  }, [dispatch]);
+
+  if (loading) return <CircularProgress />;
+  if (error) return <Typography color="error">{error}</Typography>;
 
   return (
     <Container maxWidth="lg">
-      <Typography variant="h4" gutterBottom>Your Dashboard</Typography>
+      <Typography variant="h4" gutterBottom>Select a movie to book your Tickets</Typography>
       <Grid container spacing={4}>
         {movies.map((movie) => (
-          <Grid item key={movie.id} xs={12} sm={6} md={4}>
+          <Grid item key={movie._id} xs={12} sm={6} md={4}>
             <Card>
-              <CardActionArea onClick={() => navigate(`/movie/${movie.id}`)}>
+              <CardActionArea onClick={() => navigate(`/movie/${movie._id}`)}>
                 <CardMedia
                   component="img"
                   height="300"
-                  image={movie.images.square}
+                  image={movie.images.poster}
                   alt={movie.title}
                   sx={{ objectFit: 'cover' }}
                 />

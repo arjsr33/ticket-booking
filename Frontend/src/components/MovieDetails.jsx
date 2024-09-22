@@ -34,7 +34,7 @@ const MovieDetails = () => {
     <Card>
       <CardMedia
         component="img"
-        image={movie.images.cover} // Assuming movie.images.cover exists
+        image={movie.images.cover} 
         alt={movie.title}
         sx={{ objectFit: 'cover' }}
       />

@@ -22,8 +22,8 @@ export const fetchMovie = createAsyncThunk(
   'movies/fetchMovie',
   async (id, { rejectWithValue }) => {
     try {
-      const response = await getMovie(id); // Calls the getMovie API function with the movie ID
-      return response.data; // Return the movie data
+      const response = await getMovie(id); 
+      return response.data; 
     } catch (error) {
       // Handle errors returned by the backend
       return rejectWithValue(error.response ? error.response.data : error.message);
@@ -36,10 +36,10 @@ export const addMovie = createAsyncThunk(
   'movies/addMovie',
   async (movieData, { rejectWithValue }) => {
     try {
-      const response = await createMovie(movieData); // Calls the createMovie API function
-      return response.data; // Return the created movie data
+      const response = await createMovie(movieData); 
+      return response.data; 
     } catch (error) {
-      // Handle errors returned by the backend
+      
       return rejectWithValue(error.response ? error.response.data : error.message);
     }
   }
@@ -50,10 +50,10 @@ export const editMovie = createAsyncThunk(
   'movies/editMovie',
   async ({ id, movieData }, { rejectWithValue }) => {
     try {
-      const response = await updateMovie(id, movieData); // Calls the updateMovie API function with movie ID and updated data
-      return response.data; // Return the updated movie data
+      const response = await updateMovie(id, movieData); 
+      return response.data; 
     } catch (error) {
-      // Handle errors returned by the backend
+    
       return rejectWithValue(error.response ? error.response.data : error.message);
     }
   }
@@ -64,10 +64,10 @@ export const removeMovie = createAsyncThunk(
   'movies/removeMovie',
   async (id, { rejectWithValue }) => {
     try {
-      await deleteMovie(id); // Calls the deleteMovie API function with the movie ID
-      return id; // Return the ID of the deleted movie
+      await deleteMovie(id); 
+      return id; 
     } catch (error) {
-      // Handle errors returned by the backend
+      
       return rejectWithValue(error.response ? error.response.data : error.message);
     }
   }

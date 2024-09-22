@@ -32,6 +32,7 @@ const BookingList = () => {
                 <TableCell>Movie Title</TableCell>
                 <TableCell>User</TableCell>
                 <TableCell>Date</TableCell>
+                <TableCell>Time</TableCell>
                 <TableCell>Seats</TableCell>
                 <TableCell>Status</TableCell>
                 <TableCell>Actions</TableCell>
@@ -43,7 +44,8 @@ const BookingList = () => {
                   <TableCell>{booking.movie.title}</TableCell>
                   <TableCell>{booking.user.name}</TableCell>
                   <TableCell>{new Date(booking.date).toLocaleDateString()}</TableCell>
-                  <TableCell>{booking.seats}</TableCell>
+                  <TableCell>{booking.time}</TableCell>
+                  <TableCell>{booking.seats.join(', ')}</TableCell>
                   <TableCell>{booking.status}</TableCell>
                   <TableCell>
                     <Button color="secondary" onClick={() => handleDelete(booking._id)}>Delete</Button>

@@ -1,55 +1,75 @@
-import React, { useEffect, useState } from 'react';
-import { Container, Typography, Box, Paper, Button } from '@mui/material';
-import { getUser, getUserBookings } from '../services/api';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchUserProfile } from '../redux/userSlice';
+import { fetchUserBookings, cancelUserBooking } from '../redux/bookingSlice';
+import { Typography, Card, CardContent, Button, Grid, CircularProgress } from '@mui/material';
 
 const UserProfile = () => {
-  const [user, setUser] = useState(null);
-  const [bookings, setBookings] = useState([]);
-  const [error, setError] = useState('');
+  const dispatch = useDispatch();
+  const { currentUser } = useSelector((state) => state.user);
+  const { userBookings, loading } = useSelector((state) => state.bookings);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const userData = await getUser();
-        const userBookings = await getUserBookings();
-        setUser(userData);
-        setBookings(userBookings);
-      } catch (error) {
-        setError('Failed to load user data');
-      }
-    };
-    fetchUserData();
-  }, []);
+    if (!currentUser) {
+      dispatch(fetchUserProfile());
+    }
+    dispatch(fetchUserBookings());
+  }, [dispatch, currentUser]);
 
-  if (error) {
-    return <Typography color="error">{error}</Typography>;
+  const handleCancelBooking = (bookingId) => {
+    dispatch(cancelUserBooking(bookingId));
+  };
+
+  if (loading) {
+    return <CircularProgress />;
   }
 
-  if (!user) {
-    return <Typography>Loading...</Typography>;
+  if (!currentUser) {
+    return <Typography>Loading user profile...</Typography>;
   }
 
   return (
-    <Container maxWidth="md">
-      <Typography variant="h4">{user.name}'s Profile</Typography>
-      <Box mt={4}>
-        <Paper elevation={3} style={{ padding: '20px' }}>
-          <Typography variant="h6">Email: {user.email}</Typography>
-          <Typography variant="h6">Bookings:</Typography>
-          {bookings.length > 0 ? (
-            bookings.map((booking) => (
-              <Box key={booking.id} mt={2}>
-                <Typography>
-                  Movie: {booking.movie.title} | Date: {booking.date} | Seats: {booking.seats}
-                </Typography>
-              </Box>
-            ))
-          ) : (
-            <Typography>No bookings found.</Typography>
-          )}
-        </Paper>
-      </Box>
-    </Container>
+    <div>
+      <Typography variant="h4" gutterBottom>User Profile</Typography>
+      <Card>
+        <CardContent>
+          <Typography variant="h6">Name: {currentUser.name}</Typography>
+          <Typography variant="body1">Email: {currentUser.email}</Typography>
+          <Typography variant="body1">Role: {currentUser.role}</Typography>
+        </CardContent>
+      </Card>
+
+      <Typography variant="h5" style={{ marginTop: '2rem' }}>Booking History</Typography>
+      {userBookings && userBookings.length > 0 ? (
+        <Grid container spacing={2}>
+          {userBookings.map((booking) => (
+            <Grid item xs={12} sm={6} md={4} key={booking._id}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h6">{booking.movie?.title || 'Movie title unavailable'}</Typography>
+                  <Typography>Date: {new Date(booking.date).toLocaleDateString()}</Typography>
+                  <Typography>Time: {booking.time}</Typography>
+                  <Typography>Seats: {booking.seats?.join(', ') || 'N/A'}</Typography>
+                  <Typography>Status: {booking.status}</Typography>
+                  {booking.status === 'active' && (
+                    <Button 
+                      variant="contained" 
+                      color="secondary" 
+                      onClick={() => handleCancelBooking(booking._id)}
+                      style={{ marginTop: '1rem' }}
+                    >
+                      Cancel Booking
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      ) : (
+        <Typography>No bookings found.</Typography>
+      )}
+    </div>
   );
 };
 

@@ -7,11 +7,13 @@ import {
   DialogContent, DialogActions, TextField, Rating
 } from '@mui/material';
 import { fetchMovies, addMovie, editMovie, removeMovie } from '../redux/movieSlice';
+import { fetchAllBookings } from '../redux/bookingSlice';
 
 const AdminDashboard = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate(); 
   const { list: movies, loading, error } = useSelector((state) => state.movies);
+  const { allBookings } = useSelector((state) => state.bookings);
   const [open, setOpen] = useState(false);
   const [currentMovie, setCurrentMovie] = useState(null);
   const [movieData, setMovieData] = useState({
@@ -25,6 +27,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     dispatch(fetchMovies());
+    dispatch(fetchAllBookings());
   }, [dispatch]);
 
   const handleOpen = (movie = null) => {
@@ -117,6 +120,35 @@ const AdminDashboard = () => {
                   <Button onClick={() => handleOpen(movie)}>Edit</Button>
                   <Button onClick={() => handleDelete(movie.id)}>Delete</Button>
                 </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Box sx={{ mt: 4, mb: 4 }}>
+        <Typography variant="h4" gutterBottom>Bookings</Typography>
+      </Box>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>User</TableCell>
+              <TableCell>Movie</TableCell>
+              <TableCell>Date</TableCell>
+              <TableCell>Time</TableCell>
+              <TableCell>Seats</TableCell>
+              <TableCell>Status</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {allBookings.map((booking) => (
+              <TableRow key={booking._id}>
+                <TableCell>{booking.user.name}</TableCell>
+                <TableCell>{booking.movie.title}</TableCell>
+                <TableCell>{new Date(booking.date).toLocaleDateString()}</TableCell>
+                <TableCell>{booking.time}</TableCell>
+                <TableCell>{booking.seats.join(', ')}</TableCell>
+                <TableCell>{booking.status}</TableCell>
               </TableRow>
             ))}
           </TableBody>

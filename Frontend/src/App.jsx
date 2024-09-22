@@ -27,20 +27,14 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/movie/:id" element={<MovieDetails />} />
             <Route path="/book/:id" element={<TicketBooking />} />
-            <Route path="/dashboard" element={<ProtectedRoute />}>
-              <Route index element={<CustomerDashboard />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/dashboard" element={<CustomerDashboard />} />
+              <Route path="/profile" element={<UserProfile />} />
             </Route>
-            <Route path="/admin" element={<ProtectedRoute adminOnly />}>
-              <Route index element={<AdminDashboard />} />
-            </Route>
-            <Route path="/admin/users" element={<ProtectedRoute adminOnly />}>
-              <Route index element={<UserList />} />
-            </Route>
-            <Route path="/admin/bookings" element={<ProtectedRoute adminOnly />}>
-              <Route index element={<BookingList />} />
-            </Route>
-            <Route path="/profile" element={<ProtectedRoute />}>
-              <Route index element={<UserProfile />} />
+            <Route element={<ProtectedRoute adminOnly />}>
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/users" element={<UserList />} />
+              <Route path="/admin/bookings" element={<BookingList />} />
             </Route>
           </Routes>
         </Box>

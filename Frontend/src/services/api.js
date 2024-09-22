@@ -25,7 +25,16 @@ api.interceptors.request.use(
 
 // User routes
 export const signup = (userData) => api.post('/users/signup', userData);
-export const login = (credentials) => api.post('/users/login', credentials);
+export const login = async (credentials) => {
+  try {
+    const response = await api.post('/users/login', credentials);
+    console.log("API login response:", response.data);
+    return response.data; // Return only the data part of the response
+  } catch (error) {
+    console.error("Login error:", error.response ? error.response.data : error.message);
+    throw error;
+  }
+};
 export const getUsers = () => api.get('/users');
 export const getUser = (id) => api.get(`/users/${id}`);
 export const updateUser = (id, userData) => api.patch(`/users/${id}`, userData);
@@ -44,5 +53,9 @@ export const getUserBookings = () => api.get('/bookings/user');
 export const cancelBooking = (id) => api.patch(`/bookings/${id}/cancel`);
 export const getAllBookings = () => api.get('/bookings');
 export const deleteBooking = (id) => api.delete(`/bookings/${id}`);
+export const getBookedSeats = (movieId, date, time) => 
+  api.get(`/bookings/movie/${movieId}`, { params: { date, time } });
+export const sendBookingConfirmation = (bookingDetails) => 
+  api.post('/bookings/send-confirmation', bookingDetails);
 
 export default api;

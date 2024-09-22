@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { createBooking, getUserBookings, cancelBooking, getAllBookings, deleteBooking } from '../services/api';
+import { createBooking, getUserBookings, cancelBooking, getAllBookings, deleteBooking, getBookedSeats } from '../services/api';
 
 // Async thunks for interacting with the backend API
 
@@ -68,14 +68,29 @@ export const removeBooking = createAsyncThunk(
   }
 );
 
+// Fetch Booked Seats
+export const fetchBookedSeats = createAsyncThunk(
+  'bookings/fetchBookedSeats',
+  async ({ movieId, date, time }, { rejectWithValue }) => {
+    try {
+      const response = await getBookedSeats(movieId, date, time);
+      return response.data;
+    } catch (error) {
+      console.error('Error in fetchBookedSeats:', error);
+      return rejectWithValue(error.response?.data || 'An error occurred while fetching booked seats');
+    }
+  }
+);
+
 // Booking slice definition
 const bookingSlice = createSlice({
   name: 'bookings',
   initialState: {
     userBookings: [], // List of bookings for the current user
     allBookings: [],  // List of all bookings (admin view)
+    bookedSeats: [],  // List of booked seats for a specific movie, date, and time
     loading: false,   // Loading state
-    error: null,      // Error state
+    error: null,      
   },
   reducers: {
     clearError: (state) => {
@@ -108,6 +123,19 @@ const bookingSlice = createSlice({
       })
       .addCase(fetchUserBookings.rejected, (state, action) => {
         state.error = action.payload.message; // Set the error message
+        state.loading = false;
+      })
+      // Fetch Booked Seats
+      .addCase(fetchBookedSeats.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchBookedSeats.fulfilled, (state, action) => {
+        state.bookedSeats = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchBookedSeats.rejected, (state, action) => {
+        state.error = action.payload?.message || 'Failed to fetch booked seats';
         state.loading = false;
       })
       // Cancel a user's booking
