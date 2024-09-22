@@ -7,7 +7,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: 'https://chadnibooking.vercel.app'
+  origin: 'https://chandnibookings.vercel.app'
 }));
 app.use(express.json());
 
