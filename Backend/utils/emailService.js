@@ -3,11 +3,13 @@ const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   port: 587,
-  secure: false, 
+  secure: false, // Use TLS
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS 
-  }
+    pass: process.env.EMAIL_PASS // This should be your app password
+  },
+  debug: true, // Enable debug logging
+  logger: true // Enable logger
 });
 
 const sendBookingConfirmationEmail = async (userEmail, bookingDetails) => {
@@ -32,7 +34,7 @@ const sendBookingConfirmationEmail = async (userEmail, bookingDetails) => {
     if (error.response) {
       console.error('SMTP Response:', error.response);
     }
-    return false;
+    throw error; // Throw the error so it can be caught in the route handler
   }
 };
 

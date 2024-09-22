@@ -138,14 +138,15 @@ router.post('/send-confirmation', auth, async (req, res) => {
       res.status(200).json({ message: 'Confirmation email sent successfully' });
     } else {
       console.error('Failed to send email');
-      res.status(500).json({ message: 'Failed to send confirmation email' });
+      res.status(500).json({ message: 'Failed to send confirmation email', error: 'Email sending failed' });
     }
   } catch (error) {
     console.error('Error in send-confirmation route:', error);
     res.status(500).json({ 
       message: 'Server error while sending confirmation email', 
       error: error.message,
-      stack: error.stack
+      stack: error.stack,
+      details: error.toString()
     });
   }
 });

@@ -69,13 +69,14 @@ const TicketBooking = () => {
             console.error('Error status:', error.response.status);
           }
           setEmailStatus('error');
+          // You might want to show a more detailed error message to the user here
+          alert(`Failed to send confirmation email: ${error.response?.data?.message || error.message}`);
         }
       };
   
       sendEmail();
     }
   }, [bookingConfirmed, movie, selectedSeats, selectedDate, selectedTime]);
-
 
   const handleSeatClick = (seatLabel) => {
     if (!bookedSeats.includes(seatLabel)) {
