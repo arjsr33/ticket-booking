@@ -32,7 +32,7 @@ const Home = () => {
     <Container maxWidth="lg">
       <Box sx={{ my: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom align="center">
-          Welcome to the exclusive booking website for Chandni Movies
+          Welcome to Chandni Movies
         </Typography>
         <Typography variant="h6" align="center" color="text.secondary" paragraph>
           These are the movies currently playing
