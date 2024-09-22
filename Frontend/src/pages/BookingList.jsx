@@ -29,6 +29,7 @@ const BookingList = () => {
           <Table>
             <TableHead>
               <TableRow>
+                <TableCell>Booking ID</TableCell>
                 <TableCell>Movie Title</TableCell>
                 <TableCell>User</TableCell>
                 <TableCell>Date</TableCell>
@@ -41,6 +42,7 @@ const BookingList = () => {
             <TableBody>
               {bookings.map(booking => (
                 <TableRow key={booking._id}>
+                  <TableCell>{booking._id}</TableCell>
                   <TableCell>{booking.movie.title}</TableCell>
                   <TableCell>{booking.user.name}</TableCell>
                   <TableCell>{new Date(booking.date).toLocaleDateString()}</TableCell>

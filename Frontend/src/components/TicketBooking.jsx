@@ -53,10 +53,11 @@ const TicketBooking = () => {
   }, [dispatch, id, selectedDate, selectedTime]);
 
   useEffect(() => {
-    if (bookingConfirmed && user) {
+    if (bookingConfirmed && user && bookingId) {
       const sendEmail = async () => {
         try {
           const response = await sendBookingConfirmation({
+            bookingId,
             movieTitle: movie.title,
             seats: selectedSeats,
             date: selectedDate,
@@ -82,7 +83,7 @@ const TicketBooking = () => {
       console.error('User not logged in, cannot send confirmation email');
       alert('Booking successful, but we couldn\'t send a confirmation email because you\'re not logged in. Please check your bookings in your profile.');
     }
-  }, [bookingConfirmed, movie, selectedSeats, selectedDate, selectedTime, user]);
+  }, [bookingConfirmed, movie, selectedSeats, selectedDate, selectedTime, user, bookingId]);
 
   const handleSeatClick = (seatLabel) => {
     if (!bookedSeats.includes(seatLabel)) {
@@ -107,6 +108,7 @@ const TicketBooking = () => {
       })).unwrap();
       
       if (result.success) {
+        setBookingId(result.booking._id);
         setOpenConfirmation(true);
         setBookingConfirmed(true);
       } else {
@@ -409,6 +411,9 @@ const TicketBooking = () => {
             {selectedSeats.join(', ')}
           </Typography>
           <Typography>
+            Booking ID: {bookingId}
+          </Typography>
+          <Typography>
             Date: {selectedDate && new Date(selectedDate).toLocaleDateString()}
           </Typography>
           <Typography>
@@ -421,14 +426,14 @@ const TicketBooking = () => {
             Remember to arrive one hour early and make the payment to confirm your booking.
           </Typography>
           <Alert severity="info" sx={{ mt: 2 }}>
-            A confirmation email will be sent to your registered email address shortly.
+            A confirmation email with your booking details will be sent to your registered email address shortly.
           </Alert>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseConfirmation}>Close</Button>
         </DialogActions>
       </Dialog>
-
+      
       <Snackbar
         open={emailStatus !== null}
         autoHideDuration={6000}

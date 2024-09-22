@@ -47,6 +47,7 @@ const UserProfile = () => {
               <Card>
                 <CardContent>
                   <Typography variant="h6">{booking.movie?.title || 'Movie title unavailable'}</Typography>
+                  <Typography>Booking ID: {booking._id}</Typography>
                   <Typography>Date: {new Date(booking.date).toLocaleDateString()}</Typography>
                   <Typography>Time: {booking.time}</Typography>
                   <Typography>Seats: {booking.seats?.join(', ') || 'N/A'}</Typography>

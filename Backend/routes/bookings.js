@@ -39,7 +39,7 @@ router.post('/', auth, async (req, res) => {
     await booking.save({ session });
     await session.commitTransaction();
 
-    res.status(201).json({ success: true, booking });
+    res.status(201).json({ success: true, booking: { _id: booking._id, ...booking.toObject() } });
   } catch (error) {
     await session.abortTransaction();
     res.status(500).json({ success: false, message: error.message });
@@ -120,7 +120,7 @@ router.delete('/:id', auth, async (req, res) => {
 router.post('/send-confirmation', auth, async (req, res) => {
   console.log('User from auth middleware:', req.user);
   try {
-    const { movieTitle, seats, date, time, totalPrice, userEmail } = req.body;
+    const { bookingId, movieTitle, seats, date, time, totalPrice, userEmail } = req.body;
     const authUserEmail = req.user.email;
 
     console.log('Auth user email:', authUserEmail);
@@ -134,9 +134,10 @@ router.post('/send-confirmation', auth, async (req, res) => {
     }
 
     console.log('Attempting to send email to:', emailToUse);
-    console.log('Booking details:', { movieTitle, seats, date, time, totalPrice });
+    console.log('Booking details:', { bookingId, movieTitle, seats, date, time, totalPrice });
 
     const emailSent = await sendBookingConfirmationEmail(emailToUse, {
+      bookingId,
       movieTitle,
       seats,
       date,
