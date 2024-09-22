@@ -28,6 +28,7 @@ const TicketBooking = () => {
   const [fetchError, setFetchError] = useState(null);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [emailStatus, setEmailStatus] = useState(null);
+  const user = useSelector(state => state.user.currentUser);
 
   useEffect(() => {
     dispatch(fetchMovie(id));
@@ -50,7 +51,7 @@ const TicketBooking = () => {
   }, [dispatch, id, selectedDate, selectedTime]);
 
   useEffect(() => {
-    if (bookingConfirmed) {
+    if (bookingConfirmed && user) {
       const sendEmail = async () => {
         try {
           const response = await sendBookingConfirmation({
@@ -58,7 +59,8 @@ const TicketBooking = () => {
             seats: selectedSeats,
             date: selectedDate,
             time: selectedTime,
-            totalPrice: selectedSeats.length * 100
+            totalPrice: selectedSeats.length * 100,
+            userEmail: user.email // Include user's email
           });
           console.log('Email confirmation response:', response);
           setEmailStatus('success');
@@ -69,14 +71,16 @@ const TicketBooking = () => {
             console.error('Error status:', error.response.status);
           }
           setEmailStatus('error');
-          // You might want to show a more detailed error message to the user here
-          alert(`Failed to send confirmation email: ${error.response?.data?.message || error.message}`);
+          alert(`Failed to send confirmation email. Please check your bookings in your profile.`);
         }
       };
   
       sendEmail();
+    } else if (bookingConfirmed && !user) {
+      console.error('User not logged in, cannot send confirmation email');
+      alert('Booking successful, but we couldn\'t send a confirmation email because you\'re not logged in. Please check your bookings in your profile.');
     }
-  }, [bookingConfirmed, movie, selectedSeats, selectedDate, selectedTime]);
+  }, [bookingConfirmed, movie, selectedSeats, selectedDate, selectedTime, user]);
 
   const handleSeatClick = (seatLabel) => {
     if (!bookedSeats.includes(seatLabel)) {

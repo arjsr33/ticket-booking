@@ -54,7 +54,18 @@ export const getAllBookings = () => api.get('/bookings');
 export const deleteBooking = (id) => api.delete(`/bookings/${id}`);
 export const getBookedSeats = (movieId, date, time) => 
   api.get(`/bookings/movie/${movieId}`, { params: { date, time } });
-export const sendBookingConfirmation = (bookingDetails) => 
-  api.post('/bookings/send-confirmation', bookingDetails);
+export const sendBookingConfirmation = async (bookingDetails) => {
+  try {
+    const response = await api.post('/bookings/send-confirmation', bookingDetails);
+    return response.data;
+  } catch (error) {
+    console.error('Error sending booking confirmation:', error);
+    if (error.response) {
+      console.error('Error response:', error.response.data);
+      console.error('Error status:', error.response.status);
+    }
+    throw error;
+  }
+};
 
 export default api;

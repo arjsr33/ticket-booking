@@ -119,20 +119,24 @@ router.delete('/:id', auth, async (req, res) => {
 // Route to send booking confirmation
 router.post('/send-confirmation', auth, async (req, res) => {
   try {
-    const { movieTitle, seats, date, time, totalPrice } = req.body;
-    const userEmail = req.user.email;
+    const { movieTitle, seats, date, time, totalPrice, userEmail } = req.body;
+    const authUserEmail = req.user.email;
 
-    if (!userEmail) {
-      console.error('User email not found in request');
+    console.log('Auth user email:', authUserEmail);
+    console.log('Email from request body:', userEmail);
+
+    // Prefer the email from auth, but fall back to the one from the request body
+    const emailToUse = authUserEmail || userEmail;
+
+    if (!emailToUse) {
+      console.error('No user email found');
       return res.status(400).json({ message: 'User email is required' });
     }
 
-    console.log('User email from request:', userEmail);
-
-    console.log('Attempting to send email to:', userEmail);
+    console.log('Attempting to send email to:', emailToUse);
     console.log('Booking details:', { movieTitle, seats, date, time, totalPrice });
 
-    const emailSent = await sendBookingConfirmationEmail(userEmail, {
+    const emailSent = await sendBookingConfirmationEmail(emailToUse, {
       movieTitle,
       seats,
       date,
