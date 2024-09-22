@@ -9,6 +9,7 @@ const app = express();
 app.use(cors({
   origin: 'https://chandnibookings.vercel.app'
 }));
+app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB
