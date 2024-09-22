@@ -15,13 +15,20 @@ const transporter = nodemailer.createTransport({
 const sendBookingConfirmationEmail = async (userEmail, bookingDetails) => {
   const { movieTitle, seats, date, time, totalPrice } = bookingDetails;
 
+  if (!userEmail) {
+    console.error('No recipient email provided');
+    throw new Error('Recipient email is required');
+  }
+
+  console.log('Recipient email:', userEmail); // Log the recipient email
+
   try {
     console.log('Attempting to send email to:', userEmail);
     console.log('Using email:', process.env.EMAIL_USER);
 
     let info = await transporter.sendMail({
       from: `"Your Cinema" <${process.env.EMAIL_USER}>`,
-      to: userEmail,
+      to: userEmail, // Make sure this is not empty
       subject: "Booking Confirmation",
       text: `Thank you for your booking!\n\nMovie: ${movieTitle}\nSeats: ${seats.join(', ')}\nDate: ${date}\nTime: ${time}\nTotal Price: ₹${totalPrice}\n\nPlease arrive one hour early to make the payment and confirm your booking.`,
       html: `<h1>Thank you for your booking!</h1><p><strong>Movie:</strong> ${movieTitle}<br><strong>Seats:</strong> ${seats.join(', ')}<br><strong>Date:</strong> ${date}<br><strong>Time:</strong> ${time}<br><strong>Total Price:</strong> ₹${totalPrice}</p><p>Please arrive one hour early to make the payment and confirm your booking.</p>`,
@@ -34,7 +41,7 @@ const sendBookingConfirmationEmail = async (userEmail, bookingDetails) => {
     if (error.response) {
       console.error('SMTP Response:', error.response);
     }
-    throw error; // Throw the error so it can be caught in the route handler
+    throw error;
   }
 };
 

@@ -122,6 +122,13 @@ router.post('/send-confirmation', auth, async (req, res) => {
     const { movieTitle, seats, date, time, totalPrice } = req.body;
     const userEmail = req.user.email;
 
+    if (!userEmail) {
+      console.error('User email not found in request');
+      return res.status(400).json({ message: 'User email is required' });
+    }
+
+    console.log('User email from request:', userEmail);
+
     console.log('Attempting to send email to:', userEmail);
     console.log('Booking details:', { movieTitle, seats, date, time, totalPrice });
 
@@ -138,7 +145,7 @@ router.post('/send-confirmation', auth, async (req, res) => {
       res.status(200).json({ message: 'Confirmation email sent successfully' });
     } else {
       console.error('Failed to send email');
-      res.status(500).json({ message: 'Failed to send confirmation email', error: 'Email sending failed' });
+      res.status(500).json({ message: 'Failed to send confirmation email' });
     }
   } catch (error) {
     console.error('Error in send-confirmation route:', error);
