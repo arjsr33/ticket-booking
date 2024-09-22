@@ -32,10 +32,10 @@ const Home = () => {
     <Container maxWidth="lg">
       <Box sx={{ my: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom align="center">
-          Welcome to Movie Ticketing
+          Welcome to the exclusive booking website for Chandni Movies
         </Typography>
         <Typography variant="h6" align="center" color="text.secondary" paragraph>
-          Book your favorite movies with ease!
+          These are the movies currently playing
         </Typography>
       </Box>
       <Grid container spacing={4}>

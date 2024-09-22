@@ -29,6 +29,8 @@ const TicketBooking = () => {
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [emailStatus, setEmailStatus] = useState(null);
   const user = useSelector(state => state.user.currentUser);
+  const [bookingId, setBookingId] = useState(null);
+
 
   useEffect(() => {
     dispatch(fetchMovie(id));
