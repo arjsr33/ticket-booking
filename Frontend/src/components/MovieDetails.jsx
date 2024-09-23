@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { 
   Typography, Card, CardContent, CardMedia, Chip, Button, Box,
   List, ListItem, ListItemText, Divider, Rating
@@ -7,26 +7,33 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchMovie, clearCurrentMovie } from '../redux/movieSlice';
 
-
 const MovieDetails = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // Fetch the current movie from the store
   const movie = useSelector((state) => state.movies.currentMovie);
   const loading = useSelector((state) => state.movies.loading);
   const error = useSelector((state) => state.movies.error);
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
   // Fetch movie details when the component mounts
   useEffect(() => {
-    dispatch(fetchMovie(id)); // Fetch the movie details by ID
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: `/movie/${id}` } });
+      return;
+    }
+
+    dispatch(fetchMovie(id));
 
     // Clear the current movie when the component unmounts
     return () => {
       dispatch(clearCurrentMovie());
     };
-  }, [dispatch, id]);
+  }, [dispatch, id, isAuthenticated, navigate]);
 
+  if (!isAuthenticated) return null; // Prevent rendering while redirecting
   if (loading) return <Typography>Loading...</Typography>;
   if (error) return <Typography color="error">{error}</Typography>;
   if (!movie) return <Typography>Movie not found</Typography>;
@@ -68,14 +75,13 @@ const MovieDetails = () => {
           variant="contained" 
           color="primary" 
           component={Link} 
-          to={`/book/${movie._id}`} // Using movie._id for navigation
+          to={`/book/${movie._id}`}
           sx={{ mt: 2 }}
         >
           Book Ticket
         </Button>
       </CardContent>
     </Card>
-    
   );
 };
 
