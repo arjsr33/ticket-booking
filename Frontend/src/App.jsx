@@ -13,6 +13,7 @@ import UserProfile from './pages/UserProfile';
 import ProtectedRoute from './components/ProtectedRoute';
 import UserList from './pages/UserList';
 import BookingList from './pages/BookingList';
+import Footer from './components/Footer';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
           </Routes>
         </Box>
       </Container>
+      <Footer />
     </Router>
   );
 }
