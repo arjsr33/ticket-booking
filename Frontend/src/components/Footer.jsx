@@ -20,7 +20,7 @@ const Footer = () => {
         <Typography variant="body1" align="center">
           <CopyrightIcon fontSize="small" sx={{ verticalAlign: 'middle', mr: 0.5 }} />
           {new Date().getFullYear()}{' '}
-          <Link color="inherit" href="https://chadnibooking.vercel.app/">
+          <Link color="inherit" href="https://chandnibookings.vercel.app/">
             Chandni Movies
           </Link>
         </Typography>
