@@ -44,7 +44,7 @@ const BookingList = () => {
                 <TableRow key={booking._id}>
                   <TableCell>{booking._id}</TableCell>
                   <TableCell>{booking.movie.title}</TableCell>
-                  {/* <TableCell>{booking.user.name}</TableCell> */}
+                  <TableCell>{booking.user.name}</TableCell>
                   <TableCell>{new Date(booking.date).toLocaleDateString()}</TableCell>
                   <TableCell>{booking.time}</TableCell>
                   <TableCell>{booking.seats.join(', ')}</TableCell>

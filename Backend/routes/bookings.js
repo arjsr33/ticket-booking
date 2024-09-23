@@ -100,13 +100,22 @@ router.get('/movie/:movieId', auth, async (req, res) => {
 // Get all bookings (admin only)
 router.get('/', auth, async (req, res) => {
   try {
-    const bookings = await Booking.find().populate('user', 'name email').populate('movie', 'title');
-    res.json(bookings);
+    const bookings = await Booking.find()
+      .populate('user', 'name email')
+      .populate('movie', 'title')
+      .lean();  // Use lean() for better performance
+
+    console.log('Fetched bookings:', bookings);  // Log the fetched bookings
+
+    // Remove bookings with null user or movie
+    const validBookings = bookings.filter(booking => booking.user && booking.movie);
+
+    res.json(validBookings);
   } catch (error) {
+    console.error('Error fetching all bookings:', error);
     res.status(500).json({ message: error.message });
   }
 });
-
 // Delete a booking (admin only)
 router.delete('/:id', auth, async (req, res) => {
   try {
