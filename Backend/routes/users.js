@@ -79,8 +79,8 @@ router.get('/:id', async (req, res) => {
 // Update a user
 router.patch('/:id', async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-    const updateData = { name, email };
+    const { name, email, role, password } = req.body;
+    const updateData = { name, email, role };
     if (password) {
       const salt = await bcrypt.genSalt(10);
       updateData.password = await bcrypt.hash(password, salt);

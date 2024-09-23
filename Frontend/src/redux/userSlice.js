@@ -52,6 +52,42 @@ export const updateUserProfile = createAsyncThunk(
   }
 );
 
+export const fetchAllUsers = createAsyncThunk(
+  'user/fetchAllUsers',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getUsers();
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response ? error.response.data : error.message);
+    }
+  }
+);
+
+export const updateUserById = createAsyncThunk(
+  'user/updateUserById',
+  async ({ id, userData }, { rejectWithValue }) => {
+    try {
+      const response = await updateUser(id, userData);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response ? error.response.data : error.message);
+    }
+  }
+);
+
+export const deleteUserById = createAsyncThunk(
+  'user/deleteUserById',
+  async (id, { rejectWithValue }) => {
+    try {
+      await deleteUser(id);
+      return id;
+    } catch (error) {
+      return rejectWithValue(error.response ? error.response.data : error.message);
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: 'user',
   initialState: {
@@ -59,6 +95,7 @@ const userSlice = createSlice({
     isAuthenticated: false,
     loading: false,
     error: null,
+    allUsers: [], 
   },
   reducers: {
     logout: (state) => {
@@ -123,6 +160,30 @@ const userSlice = createSlice({
       .addCase(updateUserProfile.rejected, (state, action) => {
         state.error = action.payload?.message || 'An error occurred';
         state.loading = false;
+      })
+      .addCase(fetchAllUsers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchAllUsers.fulfilled, (state, action) => {
+        state.allUsers = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchAllUsers.rejected, (state, action) => {
+        state.error = action.payload?.message || 'Failed to fetch users';
+        state.loading = false;
+      })
+      .addCase(updateUserById.fulfilled, (state, action) => {
+        const index = state.allUsers.findIndex(user => user._id === action.payload._id);
+        if (index !== -1) {
+          state.allUsers[index] = action.payload;
+        }
+        if (state.currentUser && state.currentUser._id === action.payload._id) {
+          state.currentUser = action.payload;
+        }
+      })
+      .addCase(deleteUserById.fulfilled, (state, action) => {
+        state.allUsers = state.allUsers.filter(user => user._id !== action.payload);
       });
   },
 });

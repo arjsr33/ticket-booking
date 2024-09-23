@@ -1,25 +1,83 @@
 import React, { useEffect, useState } from 'react';
-import { getUsers, deleteUser } from '../services/api';
-import { Container, Typography, Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAllUsers, updateUserById, deleteUserById } from '../redux/userSlice';
+import { 
+  Container, Typography, Box, Button, Table, TableBody, TableCell, 
+  TableContainer, TableHead, TableRow, Paper, Dialog, DialogActions, 
+  DialogContent, DialogTitle, TextField, Select, MenuItem, FormControl,
+  InputLabel, CircularProgress, Snackbar, Alert
+} from '@mui/material';
 
 const UserList = () => {
-  const [users, setUsers] = useState([]);
+  const dispatch = useDispatch();
+  const { allUsers, loading, error } = useSelector(state => state.user);
+  const [editingUser, setEditingUser] = useState(null);
+  const [editForm, setEditForm] = useState({ name: '', email: '', role: '' });
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
   useEffect(() => {
-    getUsers()
-      .then(response => setUsers(response.data))
-      .catch(error => console.error('Error fetching users:', error));
-  }, []);
+    dispatch(fetchAllUsers());
+  }, [dispatch]);
+
+  const handleEdit = (user) => {
+    setEditingUser(user);
+    setEditForm({ name: user.name, email: user.email, role: user.role });
+  };
+
+  const handleCloseEdit = () => {
+    setEditingUser(null);
+    setEditForm({ name: '', email: '', role: '' });
+  };
+
+  const handleInputChange = (e) => {
+    setEditForm({ ...editForm, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmitEdit = () => {
+    dispatch(updateUserById({ id: editingUser._id, userData: editForm }))
+      .unwrap()
+      .then(() => {
+        handleCloseEdit();
+        setSnackbar({ open: true, message: 'User updated successfully', severity: 'success' });
+      })
+      .catch(error => {
+        console.error('Error updating user:', error);
+        setSnackbar({ open: true, message: 'Failed to update user', severity: 'error' });
+      });
+  };
 
   const handleDelete = (userId) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
-      deleteUser(userId)
+      dispatch(deleteUserById(userId))
+        .unwrap()
         .then(() => {
-          setUsers(users.filter(user => user._id !== userId));
+          setSnackbar({ open: true, message: 'User deleted successfully', severity: 'success' });
         })
-        .catch(error => console.error('Error deleting user:', error));
+        .catch(error => {
+          console.error('Error deleting user:', error);
+          setSnackbar({ open: true, message: 'Failed to delete user', severity: 'error' });
+        });
     }
   };
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbar({ ...snackbar, open: false });
+  };
+
+  if (loading) return (
+    <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+      <CircularProgress />
+    </Box>
+  );
+
+  if (error) return (
+    <Container>
+      <Alert severity="error">{error}</Alert>
+    </Container>
+  );
 
   return (
     <Container maxWidth="lg">
@@ -36,15 +94,19 @@ const UserList = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.map(user => (
+              {allUsers.map(user => (
                 <TableRow key={user._id}>
                   <TableCell>{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.role}</TableCell>
                   <TableCell>
-                    <Button color="secondary" onClick={() => handleDelete(user._id)}
-                          disabled={user.role === 'admin'}>
-                            Delete
+                    <Button color="primary" onClick={() => handleEdit(user)}>Edit</Button>
+                    <Button 
+                      color="secondary" 
+                      onClick={() => handleDelete(user._id)}
+                      disabled={user.role === 'admin'}
+                    >
+                      Delete
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -53,6 +115,58 @@ const UserList = () => {
           </Table>
         </TableContainer>
       </Box>
+
+      <Dialog open={Boolean(editingUser)} onClose={handleCloseEdit}>
+        <DialogTitle>Edit User</DialogTitle>
+        <DialogContent>
+          <TextField
+            margin="dense"
+            name="name"
+            label="Name"
+            type="text"
+            fullWidth
+            value={editForm.name}
+            onChange={handleInputChange}
+          />
+          <TextField
+            margin="dense"
+            name="email"
+            label="Email"
+            type="email"
+            fullWidth
+            value={editForm.email}
+            onChange={handleInputChange}
+          />
+          <FormControl fullWidth margin="dense">
+            <InputLabel id="role-label">Role</InputLabel>
+            <Select
+              labelId="role-label"
+              name="role"
+              value={editForm.role}
+              onChange={handleInputChange}
+              label="Role"
+            >
+              <MenuItem value="user">User</MenuItem>
+              <MenuItem value="admin">Admin</MenuItem>
+            </Select>
+          </FormControl>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseEdit}>Cancel</Button>
+          <Button onClick={handleSubmitEdit} color="primary">Save</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Snackbar 
+        open={snackbar.open} 
+        autoHideDuration={6000} 
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
