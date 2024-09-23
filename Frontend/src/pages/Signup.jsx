@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { signupUser } from '../redux/userSlice';
-import { TextField, Button, Typography, Container, Box } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { TextField, Button, Typography, Container, Box, Link } from '@mui/material';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 
 const Signup = () => {
   const [name, setName] = useState('');
@@ -16,7 +16,10 @@ const Signup = () => {
     e.preventDefault();
     const resultAction = await dispatch(signupUser({ name, email, password }));
     if (signupUser.fulfilled.match(resultAction)) {
-      navigate('/');
+      // Show success message
+      alert('Signup successful! Please log in with your new credentials.');
+      // Navigate to login page
+      navigate('/login');
     }
   };
 
@@ -72,6 +75,14 @@ const Signup = () => {
           >
             {loading ? 'Signing up...' : 'Sign Up'}
           </Button>
+          <Box sx={{ textAlign: 'center' }}>
+            <Typography variant="body2">
+              Already have an account?{' '}
+              <Link component={RouterLink} to="/login" variant="body2">
+                Log In
+              </Link>
+            </Typography>
+          </Box>
         </Box>
       </Box>
     </Container>
