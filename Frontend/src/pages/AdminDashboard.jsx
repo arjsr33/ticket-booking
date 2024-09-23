@@ -143,7 +143,7 @@ const AdminDashboard = () => {
           <TableBody>
             {allBookings.map((booking) => (
               <TableRow key={booking._id}>
-                <TableCell>{booking.user.name}</TableCell>
+                {/* <TableCell>{booking.user.name}</TableCell> */}
                 <TableCell>{booking.movie.title}</TableCell>
                 <TableCell>{new Date(booking.date).toLocaleDateString()}</TableCell>
                 <TableCell>{booking.time}</TableCell>
