@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../redux/userSlice';
-import { TextField, Button, Typography, Container, Box } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { TextField, Button, Typography, Container, Box, Link } from '@mui/material';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -74,6 +74,14 @@ const Login = () => {
           >
             {loading ? 'Logging in...' : 'Login'}
           </Button>
+          <Box sx={{ textAlign: 'center' }}>
+            <Typography variant="body2">
+              Don't have an account?{' '}
+              <Link component={RouterLink} to="/signup" variant="body2">
+                Sign Up
+              </Link>
+            </Typography>
+          </Box>
         </Box>
       </Box>
     </Container>
