@@ -56,8 +56,11 @@ router.post('/login', async (req, res) => {
 });
 
 // Get all users
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
   try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Access denied. Admin only.' });
+    }
     const users = await User.find().select('-password');
     res.json(users);
   } catch (error) {
@@ -65,26 +68,36 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get a single user
-router.get('/:id', async (req, res) => {
+// Get a single user (protected)
+router.get('/:id', auth, async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select('-password');
     if (!user) return res.status(404).json({ message: 'User not found' });
+    if (req.user.role !== 'admin' && req.user.id !== req.params.id) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
     res.json(user);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-// Update a user
-router.patch('/:id', async (req, res) => {
+// Update a user (protected)
+router.patch('/:id', auth, async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-    const updateData = { name, email };
-    if (password) {
-      const salt = await bcrypt.genSalt(10);
-      updateData.password = await bcrypt.hash(password, salt);
+    if (req.user.role !== 'admin' && req.user.id !== req.params.id) {
+      return res.status(403).json({ message: 'Access denied' });
     }
+
+    const { name, email, role, isActive } = req.body;
+    const updateData = { name, email };
+
+    // Only admin can change role and active status
+    if (req.user.role === 'admin') {
+      updateData.role = role;
+      updateData.isActive = isActive;
+    }
+
     const updatedUser = await User.findByIdAndUpdate(req.params.id, updateData, { new: true }).select('-password');
     res.json(updatedUser);
   } catch (error) {
@@ -92,9 +105,12 @@ router.patch('/:id', async (req, res) => {
   }
 });
 
-// Delete a user
-router.delete('/:id', async (req, res) => {
+// Delete a user (protected, admin only)
+router.delete('/:id', auth, async (req, res) => {
   try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Access denied. Admin only.' });
+    }
     await User.findByIdAndDelete(req.params.id);
     res.json({ message: 'User deleted' });
   } catch (error) {
