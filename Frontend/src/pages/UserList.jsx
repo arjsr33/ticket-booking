@@ -16,7 +16,11 @@ const UserList = () => {
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
   useEffect(() => {
-    dispatch(fetchAllUsers());
+    console.log('Dispatching fetchAllUsers');
+    dispatch(fetchAllUsers())
+      .unwrap()
+      .then(result => console.log('fetchAllUsers result:', result))
+      .catch(error => console.error('fetchAllUsers error:', error));
   }, [dispatch]);
 
   const handleEdit = (user) => {
@@ -75,7 +79,13 @@ const UserList = () => {
 
   if (error) return (
     <Container>
-      <Alert severity="error">{error}</Alert>
+      <Alert severity="error">
+        <Typography variant="h6">Error fetching users</Typography>
+        <Typography>{error}</Typography>
+        <Button onClick={() => dispatch(fetchAllUsers())} color="inherit" sx={{ mt: 2 }}>
+          Retry
+        </Button>
+      </Alert>
     </Container>
   );
 

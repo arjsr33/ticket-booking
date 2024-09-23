@@ -61,7 +61,8 @@ router.get('/', async (req, res) => {
     const users = await User.find().select('-password');
     res.json(users);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Error fetching users:', error);
+    res.status(500).json({ message: 'Server error while fetching users' });
   }
 });
 

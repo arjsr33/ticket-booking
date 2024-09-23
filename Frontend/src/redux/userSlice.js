@@ -56,9 +56,12 @@ export const fetchAllUsers = createAsyncThunk(
   'user/fetchAllUsers',
   async (_, { rejectWithValue }) => {
     try {
+      console.log('Fetching all users...');
       const response = await getUsers();
+      console.log('Fetched users:', response.data);
       return response.data;
     } catch (error) {
+      console.error('Error fetching users:', error);
       return rejectWithValue(error.response ? error.response.data : error.message);
     }
   }
@@ -166,10 +169,12 @@ const userSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchAllUsers.fulfilled, (state, action) => {
+        console.log('fetchAllUsers fulfilled:', action.payload);
         state.allUsers = action.payload;
         state.loading = false;
       })
       .addCase(fetchAllUsers.rejected, (state, action) => {
+        console.error('fetchAllUsers rejected:', action.payload);
         state.error = action.payload?.message || 'Failed to fetch users';
         state.loading = false;
       })
