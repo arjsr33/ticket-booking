@@ -10,8 +10,6 @@ import {
 import { fetchMovie, clearCurrentMovie } from '../redux/movieSlice';
 import { bookTicket, fetchBookedSeats, clearError, fetchUserBookings } from '../redux/bookingSlice';
 import { sendBookingConfirmation } from '../services/api'; 
-import Footer from './components/Footer';
-
 
 
 const TicketBooking = () => {
@@ -452,7 +450,6 @@ const TicketBooking = () => {
             : 'Failed to send confirmation email. Please check your bookings in your profile.'}
         </Alert>
       </Snackbar>
-      <Footer />
     </Container>
   );
 };

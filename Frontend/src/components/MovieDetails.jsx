@@ -6,7 +6,6 @@ import {
 } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchMovie, clearCurrentMovie } from '../redux/movieSlice';
-import Footer from './components/Footer';
 
 
 const MovieDetails = () => {
@@ -75,7 +74,6 @@ const MovieDetails = () => {
           Book Ticket
         </Button>
       </CardContent>
-      <Footer />
     </Card>
     
   );

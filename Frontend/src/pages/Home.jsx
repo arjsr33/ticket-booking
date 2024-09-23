@@ -6,8 +6,6 @@ import {
   CardActions, Button, Box 
 } from '@mui/material';
 import { fetchMovies } from '../redux/movieSlice';
-import Footer from './components/Footer';
-
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -70,7 +68,6 @@ const Home = () => {
           </Grid>
         ))}
       </Grid>
-      <Footer />
     </Container>
   );
 };
