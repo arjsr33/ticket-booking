@@ -6,6 +6,8 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { fetchMovies } from '../redux/movieSlice';
+import Footer from './components/Footer';
+
 
 const CustomerDashboard = () => {
   const dispatch = useDispatch();
@@ -47,6 +49,7 @@ const CustomerDashboard = () => {
           </Grid>
         ))}
       </Grid>
+      <Footer />
     </Container>
   );
 };

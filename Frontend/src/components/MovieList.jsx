@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, Typography, Grid } from '@mui/material';
 import { getMovies } from '../services/api';
+import Footer from './components/Footer';
+
 
 const MovieList = () => {
   const [movies, setMovies] = useState([]);
@@ -36,7 +38,9 @@ const MovieList = () => {
           </Card>
         </Grid>
       ))}
+      <Footer />
     </Grid>
+    
   );
 };
 
