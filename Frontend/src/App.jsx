@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useLocation, BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { CssBaseline, Container, Box } from '@mui/material';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
@@ -13,14 +13,19 @@ import UserProfile from './pages/UserProfile';
 import ProtectedRoute from './components/ProtectedRoute';
 import UserList from './pages/UserList';
 import BookingList from './pages/BookingList';
+import Footer from './components/Footer';
 
-function App() {
+const routesWithoutFooter = ['/login', '/signup', '/admin', '/profile'];
+
+const MainContent = () => {
+  const location = useLocation();
+  const showFooter = !routesWithoutFooter.includes(location.pathname) && !location.pathname.startsWith('/admin');
+
   return (
-    <Router>
-      <CssBaseline />
+    <>
       <Navbar />
       <Container>
-        <Box sx={{ mt: 4 }}>
+        <Box sx={{ mt: 4 }}> 
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
@@ -39,6 +44,16 @@ function App() {
           </Routes>
         </Box>
       </Container>
+      {showFooter && <Footer />}
+    </>
+  );
+};
+
+function App() {
+  return (
+    <Router>
+      <CssBaseline />
+      <MainContent />
     </Router>
   );
 }
