@@ -37,6 +37,35 @@ const TicketBooking = () => {
   const user = useSelector(state => state.user.currentUser);
   const [bookingId, setBookingId] = useState(null);
 
+  // Helper functions for pricing
+  const isPremiumSeat = (seatLabel) => {
+    const row = seatLabel.charAt(0);
+    return ['J', 'K', 'L'].includes(row); // Last 3 rows are premium
+  };
+
+  const calculateTotalPrice = () => {
+    let total = 0;
+    selectedSeats.forEach(seat => {
+      total += isPremiumSeat(seat) ? 150 : 100; // Premium: ₹150, Standard: ₹100
+    });
+    return total;
+  };
+
+  const getPricingBreakdown = () => {
+    const premiumSeats = selectedSeats.filter(seat => isPremiumSeat(seat));
+    const standardSeats = selectedSeats.filter(seat => !isPremiumSeat(seat));
+    
+    let breakdown = [];
+    if (standardSeats.length > 0) {
+      breakdown.push(`${standardSeats.length} Standard @ ₹100`);
+    }
+    if (premiumSeats.length > 0) {
+      breakdown.push(`${premiumSeats.length} Premium @ ₹150`);
+    }
+    
+    return breakdown.join(' + ') || 'No seats selected';
+  };
+
   useEffect(() => {
     if (id) {
       dispatch(fetchMovie(id));
@@ -69,7 +98,7 @@ const TicketBooking = () => {
             seats: selectedSeats,
             date: selectedDate,
             time: selectedTime,
-            totalPrice: selectedSeats.length * 100,
+            totalPrice: calculateTotalPrice(),
             userEmail: user.email 
           });
           console.log('Email confirmation response:', response);
@@ -111,7 +140,8 @@ const TicketBooking = () => {
         movieId: movie._id,
         seats: selectedSeats,
         date: selectedDate,
-        time: selectedTime
+        time: selectedTime,
+        totalPrice: calculateTotalPrice()
       })).unwrap();
       
       if (result.success) {
@@ -321,10 +351,11 @@ const TicketBooking = () => {
           flexDirection: 'column',
           alignItems: 'center'
         }}>
-          
-
-          {/* Standard Section (Remaining rows) */}
-          <Box sx={{ width: '100%' }}>
+          {/* Standard Section (Front rows - closer to screen) */}
+          <Box sx={{ 
+            mb: 4, 
+            width: '100%'
+          }}>
             <Typography variant="h6" sx={{ 
               color: alpha('#fff', 0.7), 
               fontWeight: 600, 
@@ -334,11 +365,11 @@ const TicketBooking = () => {
             }}>
               STANDARD SECTION
             </Typography>
-            {rows.slice(3).split('').map((row) => renderRow(row))}
+            {rows.slice(0, 9).split('').map((row) => renderRow(row))}
           </Box>
-          {/* Premium Section (Top 3 rows) */}
+
+          {/* Premium Section (Back rows - better view) */}
           <Box sx={{ 
-            mb: 4, 
             p: 3, 
             borderRadius: 3, 
             border: `2px solid ${alpha('#FFD700', 0.4)}`,
@@ -356,7 +387,15 @@ const TicketBooking = () => {
             }}>
               🌟 PREMIUM SECTION 🌟
             </Typography>
-            {rows.slice(0, 3).split('').map((row) => renderRow(row))}
+            <Typography variant="body2" sx={{ 
+              color: alpha('#FFD700', 0.8), 
+              textAlign: 'center',
+              mb: 3,
+              fontStyle: 'italic'
+            }}>
+              Best viewing experience with enhanced comfort
+            </Typography>
+            {rows.slice(9).split('').map((row) => renderRow(row))}
           </Box>
         </Box>
       </Box>
@@ -793,10 +832,10 @@ const TicketBooking = () => {
 
                 <Box sx={{ mb: 3 }}>
                   <Typography variant="h6" sx={{ color: '#FFD700', mb: 1 }}>
-                    Total Amount: ₹{selectedSeats.length * 100}
+                    Total Amount: ₹{calculateTotalPrice()}
                   </Typography>
                   <Typography variant="body2" sx={{ color: alpha('#fff', 0.6) }}>
-                    Premium seats @ ₹100 each
+                    {getPricingBreakdown()}
                   </Typography>
                 </Box>
 
@@ -944,7 +983,10 @@ const TicketBooking = () => {
                           Total Amount
                         </Typography>
                         <Typography variant="body1" sx={{ color: '#FFD700', fontWeight: 700 }}>
-                          ₹{selectedSeats.length * 100}
+                          ₹{calculateTotalPrice()}
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: alpha('#fff', 0.5) }}>
+                          {getPricingBreakdown()}
                         </Typography>
                       </Box>
                     </Box>
