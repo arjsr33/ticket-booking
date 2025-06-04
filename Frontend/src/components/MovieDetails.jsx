@@ -520,20 +520,40 @@ const MovieDetails = () => {
                         {movie.reviews && movie.reviews.length > 0 ? (
                           movie.reviews.map((review, index) => (
                             <Box key={index} sx={{ mb: 2 }}>
-                              <Typography 
-                                variant="body2" 
+                              <Box 
                                 sx={{ 
-                                  color: alpha('#fff', 0.8),
-                                  fontStyle: 'italic',
-                                  lineHeight: 1.6,
-                                  '&::before': { content: '"', color: '#FFD700' },
-                                  '&::after': { content: '"', color: '#FFD700' }
+                                  background: alpha('#FFD700', 0.05),
+                                  borderLeft: `3px solid #FFD700`,
+                                  borderRadius: 1,
+                                  p: 2,
+                                  position: 'relative'
                                 }}
                               >
-                                {review}
-                              </Typography>
+                                <Typography 
+                                  variant="body2" 
+                                  sx={{ 
+                                    color: alpha('#fff', 0.9),
+                                    fontStyle: 'italic',
+                                    lineHeight: 1.6,
+                                  }}
+                                >
+                                  "{review}"
+                                </Typography>
+                                <Box
+                                  sx={{
+                                    position: 'absolute',
+                                    top: 8,
+                                    right: 8,
+                                    color: '#FFD700',
+                                    fontSize: '1.5rem',
+                                    opacity: 0.3
+                                  }}
+                                >
+                                  "
+                                </Box>
+                              </Box>
                               {index < movie.reviews.length - 1 && (
-                                <Divider sx={{ mt: 1.5, borderColor: alpha('#fff', 0.05) }} />
+                                <Box sx={{ my: 1.5 }} />
                               )}
                             </Box>
                           ))
