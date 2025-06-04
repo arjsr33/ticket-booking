@@ -321,6 +321,21 @@ const TicketBooking = () => {
           flexDirection: 'column',
           alignItems: 'center'
         }}>
+          
+
+          {/* Standard Section (Remaining rows) */}
+          <Box sx={{ width: '100%' }}>
+            <Typography variant="h6" sx={{ 
+              color: alpha('#fff', 0.7), 
+              fontWeight: 600, 
+              mb: 3, 
+              textAlign: 'center',
+              letterSpacing: '1px'
+            }}>
+              STANDARD SECTION
+            </Typography>
+            {rows.slice(3).split('').map((row) => renderRow(row))}
+          </Box>
           {/* Premium Section (Top 3 rows) */}
           <Box sx={{ 
             mb: 4, 
@@ -342,20 +357,6 @@ const TicketBooking = () => {
               🌟 PREMIUM SECTION 🌟
             </Typography>
             {rows.slice(0, 3).split('').map((row) => renderRow(row))}
-          </Box>
-
-          {/* Standard Section (Remaining rows) */}
-          <Box sx={{ width: '100%' }}>
-            <Typography variant="h6" sx={{ 
-              color: alpha('#fff', 0.7), 
-              fontWeight: 600, 
-              mb: 3, 
-              textAlign: 'center',
-              letterSpacing: '1px'
-            }}>
-              STANDARD SECTION
-            </Typography>
-            {rows.slice(3).split('').map((row) => renderRow(row))}
           </Box>
         </Box>
       </Box>
