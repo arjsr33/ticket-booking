@@ -180,8 +180,8 @@ const TicketBooking = () => {
         key={seatLabel}
         elevation={isSelected ? 8 : 2}
         sx={{
-          width: 32,
-          height: 32,
+          width: 28,
+          height: 28,
           bgcolor: 
             isBooked ? alpha('#666', 0.8) :
             isSelected ? '#FFD700' : alpha('#fff', 0.1),
@@ -193,28 +193,15 @@ const TicketBooking = () => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          borderRadius: 2,
+          borderRadius: 1,
           backdropFilter: 'blur(10px)',
           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          position: 'relative',
           flexShrink: 0,
           '&:hover': !isBooked ? {
             bgcolor: isSelected ? '#FFE55C' : alpha('#FFD700', 0.3),
             transform: 'scale(1.1)',
             boxShadow: `0 4px 12px ${alpha('#FFD700', 0.4)}`,
           } : {},
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: -2,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: 6,
-            height: 6,
-            borderRadius: '50%',
-            bgcolor: isSelected ? '#FFA500' : 'transparent',
-            transition: 'all 0.3s ease',
-          }
         }}
         onClick={() => handleSeatClick(seatLabel)}
       >
@@ -224,7 +211,7 @@ const TicketBooking = () => {
             color: isBooked ? alpha('#fff', 0.5) : 
                    isSelected ? '#000' : alpha('#fff', 0.8),
             fontWeight: 600,
-            fontSize: '0.7rem'
+            fontSize: '0.6rem'
           }}
         >
           {seatNumber}
@@ -237,19 +224,18 @@ const TicketBooking = () => {
     <Box key={row} sx={{ 
       display: 'flex', 
       alignItems: 'center', 
-      mb: 2, 
-      gap: 2,
+      mb: 1, 
+      gap: 1,
       justifyContent: 'center',
       width: '100%'
     }}>
       <Typography 
         sx={{ 
-          width: 32, 
+          width: 24, 
           textAlign: 'center',
           color: '#FFD700',
           fontWeight: 700,
-          fontSize: '1.1rem',
-          textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+          fontSize: '0.9rem',
           flexShrink: 0
         }}
       >
@@ -257,10 +243,10 @@ const TicketBooking = () => {
       </Typography>
       <Box sx={{ 
         display: 'flex',
-        gap: 1,
+        gap: 0.5,
         justifyContent: 'center',
         flexWrap: 'wrap',
-        maxWidth: '600px',
+        maxWidth: '500px',
         width: '100%'
       }}>
         {Array.from({ length: 15 }, (_, i) => {
@@ -279,124 +265,106 @@ const TicketBooking = () => {
         display: 'flex', 
         flexDirection: 'column', 
         alignItems: 'center',
-        p: 3,
+        p: 2,
         background: `linear-gradient(135deg, 
           rgba(0, 0, 0, 0.4) 0%, 
           rgba(26, 26, 46, 0.3) 100%)`,
-        borderRadius: 3,
+        borderRadius: 2,
         border: `1px solid ${alpha('#fff', 0.1)}`,
         backdropFilter: 'blur(10px)'
       }}>
-        {/* Screen - Centered and sized to match seat width */}
+        {/* Screen */}
         <Box sx={{ 
-          mb: 4, 
-          p: 3, 
+          mb: 2, 
+          p: 1.5, 
           background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)',
-          borderRadius: 3,
-          boxShadow: `0 8px 32px ${alpha('#FFD700', 0.6)}`,
-          position: 'relative',
-          width: '80%',
-          maxWidth: '600px',
+          borderRadius: 2,
+          boxShadow: `0 4px 16px ${alpha('#FFD700', 0.6)}`,
+          width: '60%',
+          maxWidth: '400px',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          minHeight: '60px'
+          minHeight: '40px'
         }}>
           <Typography 
-            variant="h5" 
+            variant="h6" 
             sx={{ 
               color: '#000', 
               fontWeight: 700,
               textAlign: 'center',
-              letterSpacing: '2px',
-              textShadow: '0 2px 4px rgba(0,0,0,0.2)'
+              letterSpacing: '1px',
+              fontSize: '0.9rem'
             }}
           >
             🎬 SCREEN 🎬
           </Typography>
-          
-          {/* Screen reflection effect */}
-          <Box sx={{
-            position: 'absolute',
-            bottom: -12,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: '90%',
-            height: '8px',
-            background: `linear-gradient(135deg, ${alpha('#FFD700', 0.3)} 0%, ${alpha('#FFA500', 0.1)} 100%)`,
-            borderRadius: '50%',
-            filter: 'blur(4px)'
-          }} />
-          
-          {/* Screen pointer */}
-          <Box sx={{
-            position: 'absolute',
-            bottom: -16,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: 0,
-            height: 0,
-            borderLeft: '12px solid transparent',
-            borderRight: '12px solid transparent',
-            borderTop: '12px solid #FFA500',
-            filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'
-          }} />
         </Box>
 
-        {/* Seats Container - Centered to align with screen */}
+        {/* Seats */}
         <Box sx={{ 
           width: '100%', 
-          maxWidth: '900px',
+          maxWidth: '600px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center'
         }}>
-          {/* Standard Section (Front rows - closer to screen) */}
-          <Box sx={{ 
-            mb: 4, 
-            width: '100%'
-          }}>
-            <Typography variant="h6" sx={{ 
+          {/* Standard Section */}
+          <Box sx={{ mb: 2, width: '100%' }}>
+            <Typography variant="body2" sx={{ 
               color: alpha('#fff', 0.7), 
               fontWeight: 600, 
-              mb: 3, 
+              mb: 1, 
               textAlign: 'center',
-              letterSpacing: '1px'
+              fontSize: '0.8rem'
             }}>
               STANDARD SECTION
             </Typography>
             {rows.slice(0, 9).split('').map((row) => renderRow(row))}
           </Box>
 
-          {/* Premium Section (Back rows - better view) */}
+          {/* Premium Section */}
           <Box sx={{ 
-            p: 3, 
-            borderRadius: 3, 
-            border: `2px solid ${alpha('#FFD700', 0.4)}`,
+            p: 1.5, 
+            borderRadius: 2, 
+            border: `1px solid ${alpha('#FFD700', 0.4)}`,
             background: `linear-gradient(135deg, ${alpha('#FFD700', 0.05)} 0%, ${alpha('#FFA500', 0.02)} 100%)`,
             width: '100%',
             backdropFilter: 'blur(5px)'
           }}>
-            <Typography variant="h6" sx={{ 
+            <Typography variant="body2" sx={{ 
               color: '#FFD700', 
               fontWeight: 700, 
-              mb: 3, 
+              mb: 1, 
               textAlign: 'center',
-              letterSpacing: '1px',
-              textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+              fontSize: '0.8rem'
             }}>
               🌟 PREMIUM SECTION 🌟
             </Typography>
-            <Typography variant="body2" sx={{ 
-              color: alpha('#FFD700', 0.8), 
-              textAlign: 'center',
-              mb: 3,
-              fontStyle: 'italic'
-            }}>
-              Best viewing experience with enhanced comfort
-            </Typography>
             {rows.slice(9).split('').map((row) => renderRow(row))}
           </Box>
+        </Box>
+
+        {/* Seat Legend */}
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 2, flexWrap: 'wrap' }}>
+          {[
+            { color: alpha('#fff', 0.1), border: alpha('#fff', 0.2), label: 'Available', textColor: alpha('#fff', 0.8) },
+            { color: '#FFD700', border: '#FFA500', label: 'Selected', textColor: '#000' },
+            { color: alpha('#666', 0.8), border: alpha('#444', 0.8), label: 'Occupied', textColor: alpha('#fff', 0.5) }
+          ].map((item, index) => (
+            <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <Paper sx={{ 
+                width: 16, 
+                height: 16, 
+                bgcolor: item.color,
+                border: `1px solid ${item.border}`,
+                borderRadius: 0.5
+              }} />
+              <Typography variant="caption" sx={{ color: item.textColor, fontWeight: 500 }}>
+                {item.label}
+              </Typography>
+            </Box>
+          ))}
         </Box>
       </Box>
     );
@@ -424,37 +392,36 @@ const TicketBooking = () => {
             value={date.toISOString().split('T')[0]} 
             aria-label={date.toDateString()}
             sx={{ 
-              p: 2, 
+              p: 1, 
               flexDirection: 'column',
-              minWidth: 100,
+              minWidth: 70,
               background: alpha('#fff', 0.05),
               border: `1px solid ${alpha('#fff', 0.2)}`,
               color: alpha('#fff', 0.8),
-              borderRadius: 2,
+              borderRadius: 1,
               backdropFilter: 'blur(10px)',
               transition: 'all 0.3s ease',
               '&.Mui-selected': { 
                 bgcolor: '#FFD700',
                 color: '#000',
                 fontWeight: 700,
-                boxShadow: `0 4px 15px ${alpha('#FFD700', 0.4)}`,
+                boxShadow: `0 2px 8px ${alpha('#FFD700', 0.4)}`,
                 '&:hover': {
                   bgcolor: '#FFE55C',
                 }
               },
               '&:hover': {
                 bgcolor: alpha('#FFD700', 0.1),
-                transform: 'translateY(-2px)',
               }
             }}
           >
-            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+            <Typography variant="caption" sx={{ fontWeight: 600, fontSize: '0.7rem' }}>
               {date.toLocaleDateString('en-US', { weekday: 'short' })}
             </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 700 }}>
+            <Typography variant="body1" sx={{ fontWeight: 700 }}>
               {date.getDate()}
             </Typography>
-            <Typography variant="body2">
+            <Typography variant="caption" sx={{ fontSize: '0.7rem' }}>
               {date.toLocaleDateString('en-US', { month: 'short' })}
             </Typography>
           </ToggleButton>
@@ -480,32 +447,31 @@ const TicketBooking = () => {
             value={time} 
             aria-label={time}
             sx={{ 
-              px: 3,
-              py: 1.5,
+              px: 2,
+              py: 1,
               background: alpha('#fff', 0.05),
               border: `1px solid ${alpha('#fff', 0.2)}`,
               color: alpha('#fff', 0.8),
-              borderRadius: 2,
+              borderRadius: 1,
               backdropFilter: 'blur(10px)',
               transition: 'all 0.3s ease',
               '&.Mui-selected': { 
                 bgcolor: '#FFD700',
                 color: '#000',
                 fontWeight: 700,
-                boxShadow: `0 4px 15px ${alpha('#FFD700', 0.4)}`,
+                boxShadow: `0 2px 8px ${alpha('#FFD700', 0.4)}`,
                 '&:hover': {
                   bgcolor: '#FFE55C',
                 }
               },
               '&:hover': {
                 bgcolor: alpha('#FFD700', 0.1),
-                transform: 'translateY(-2px)',
               }
             }}
           >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <AccessTime sx={{ fontSize: '1rem' }} />
-              {time}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <AccessTime sx={{ fontSize: '0.9rem' }} />
+              <Typography variant="body2">{time}</Typography>
             </Box>
           </ToggleButton>
         ))}
@@ -592,18 +558,18 @@ const TicketBooking = () => {
           #1a1a2e 75%, 
           #0a0a0a 100%)`,
         pt: 2,
-        pb: 6
+        pb: 4
       }}
     >
       <Container maxWidth="xl">
         {/* Header */}
-        <Box sx={{ mb: 4 }}>
+        <Box sx={{ mb: 2 }}>
           <Button 
             startIcon={<ArrowBack />}
             onClick={() => navigate(-1)}
             sx={{ 
               color: alpha('#fff', 0.8),
-              mb: 3,
+              mb: 2,
               '&:hover': { 
                 color: '#FFD700',
                 background: alpha('#FFD700', 0.1)
@@ -613,6 +579,7 @@ const TicketBooking = () => {
             Back to Movie Details
           </Button>
 
+          {/* Compact Movie Header */}
           <Card 
             sx={{
               background: `linear-gradient(135deg, 
@@ -620,15 +587,15 @@ const TicketBooking = () => {
                 rgba(255, 165, 0, 0.05) 100%)`,
               backdropFilter: 'blur(10px)',
               border: `1px solid ${alpha('#FFD700', 0.2)}`,
-              borderRadius: 3,
-              mb: 4
+              borderRadius: 2,
+              mb: 2
             }}
           >
-            <CardContent sx={{ p: 3 }}>
-              <Grid container spacing={3} alignItems="center">
-                <Grid item xs={12} md={8}>
+            <CardContent sx={{ p: 2 }}>
+              <Grid container spacing={2} alignItems="center">
+                <Grid item xs={12} md={9}>
                   <Typography 
-                    variant="h4" 
+                    variant="h5" 
                     sx={{
                       color: '#FFD700',
                       fontWeight: 700,
@@ -636,14 +603,12 @@ const TicketBooking = () => {
                       fontFamily: '"Cinzel", "Georgia", serif',
                     }}
                   >
-                    Book Premium Seats
-                  </Typography>
-                  <Typography variant="h5" sx={{ color: 'white', mb: 2 }}>
                     {movie.title}
                   </Typography>
-                  <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+                  <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', flexWrap: 'wrap' }}>
                     <Chip 
                       label={movie.language} 
+                      size="small"
                       sx={{ 
                         background: alpha('#FFD700', 0.2),
                         color: '#FFD700',
@@ -652,13 +617,14 @@ const TicketBooking = () => {
                     />
                     <Chip 
                       label={movie.category} 
+                      size="small"
                       sx={{ 
                         background: alpha('#4FC3F7', 0.2),
                         color: '#4FC3F7',
                         fontWeight: 600
                       }} 
                     />
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <Rating 
                         value={movie.rating || 4.5} 
                         precision={0.1} 
@@ -675,17 +641,17 @@ const TicketBooking = () => {
                     </Box>
                   </Box>
                 </Grid>
-                <Grid item xs={12} md={4}>
+                <Grid item xs={12} md={3}>
                   <Box 
                     component="img"
                     src={movie.images.poster}
                     alt={movie.title}
                     sx={{
                       width: '100%',
-                      maxWidth: 200,
+                      maxWidth: 120,
                       height: 'auto',
-                      borderRadius: 2,
-                      boxShadow: `0 8px 32px ${alpha('#000', 0.3)}`,
+                      borderRadius: 1,
+                      boxShadow: `0 4px 16px ${alpha('#000', 0.3)}`,
                       ml: 'auto',
                       display: 'block'
                     }}
@@ -701,7 +667,7 @@ const TicketBooking = () => {
             severity="error" 
             onClose={() => setFetchError(null)}
             sx={{ 
-              mb: 3,
+              mb: 2,
               background: alpha('#f44336', 0.1),
               color: '#ff5252',
               border: `1px solid ${alpha('#f44336', 0.2)}`
@@ -711,76 +677,58 @@ const TicketBooking = () => {
           </Alert>
         )}
 
-        <Grid container spacing={4}>
+        <Grid container spacing={2}>
           {/* Left Column - Selection */}
           <Grid item xs={12} lg={8}>
-            {/* Date Selection */}
-            <Card sx={{ 
-              mb: 3,
-              background: alpha('#fff', 0.05),
-              backdropFilter: 'blur(10px)',
-              border: `1px solid ${alpha('#fff', 0.1)}`
-            }}>
-              <CardContent sx={{ p: 3 }}>
-                <Typography variant="h6" sx={{ color: '#FFD700', mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <CalendarToday />
-                  Select Date
-                </Typography>
-                {renderDateSelection()}
-              </CardContent>
-            </Card>
+            {/* Compact Selection Row */}
+            <Grid container spacing={2} sx={{ mb: 2 }}>
+              {/* Date Selection */}
+              <Grid item xs={12} md={4}>
+                <Card sx={{ 
+                  background: alpha('#fff', 0.05),
+                  backdropFilter: 'blur(10px)',
+                  border: `1px solid ${alpha('#fff', 0.1)}`
+                }}>
+                  <CardContent sx={{ p: 1.5 }}>
+                    <Typography variant="body1" sx={{ color: '#FFD700', mb: 1, display: 'flex', alignItems: 'center', gap: 0.5, fontWeight: 600 }}>
+                      <CalendarToday sx={{ fontSize: '1rem' }} />
+                      Select Date
+                    </Typography>
+                    {renderDateSelection()}
+                  </CardContent>
+                </Card>
+              </Grid>
 
-            {/* Time Selection */}
-            <Card sx={{ 
-              mb: 3,
-              background: alpha('#fff', 0.05),
-              backdropFilter: 'blur(10px)',
-              border: `1px solid ${alpha('#fff', 0.1)}`
-            }}>
-              <CardContent sx={{ p: 3 }}>
-                <Typography variant="h6" sx={{ color: '#FFD700', mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Schedule />
-                  Select Showtime
-                </Typography>
-                {renderTimeSelection()}
-              </CardContent>
-            </Card>
+              {/* Time Selection */}
+              <Grid item xs={12} md={8}>
+                <Card sx={{ 
+                  background: alpha('#fff', 0.05),
+                  backdropFilter: 'blur(10px)',
+                  border: `1px solid ${alpha('#fff', 0.1)}`
+                }}>
+                  <CardContent sx={{ p: 1.5 }}>
+                    <Typography variant="body1" sx={{ color: '#FFD700', mb: 1, display: 'flex', alignItems: 'center', gap: 0.5, fontWeight: 600 }}>
+                      <Schedule sx={{ fontSize: '1rem' }} />
+                      Select Showtime
+                    </Typography>
+                    {renderTimeSelection()}
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
 
             {/* Seat Selection */}
             <Card sx={{ 
-              mb: 3,
               background: alpha('#fff', 0.05),
               backdropFilter: 'blur(10px)',
               border: `1px solid ${alpha('#fff', 0.1)}`
             }}>
-              <CardContent sx={{ p: 3 }}>
-                <Typography variant="h6" sx={{ color: '#FFD700', mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <EventSeat />
+              <CardContent sx={{ p: 1.5 }}>
+                <Typography variant="body1" sx={{ color: '#FFD700', mb: 1, display: 'flex', alignItems: 'center', gap: 0.5, fontWeight: 600 }}>
+                  <EventSeat sx={{ fontSize: '1rem' }} />
                   Choose Your Premium Seats
                 </Typography>
                 {renderSeats()}
-                
-                {/* Seat Legend */}
-                <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 3, flexWrap: 'wrap' }}>
-                  {[
-                    { color: alpha('#fff', 0.1), border: alpha('#fff', 0.2), label: 'Available', textColor: alpha('#fff', 0.8) },
-                    { color: '#FFD700', border: '#FFA500', label: 'Selected', textColor: '#000' },
-                    { color: alpha('#666', 0.8), border: alpha('#444', 0.8), label: 'Occupied', textColor: alpha('#fff', 0.5) }
-                  ].map((item, index) => (
-                    <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Paper sx={{ 
-                        width: 24, 
-                        height: 24, 
-                        bgcolor: item.color,
-                        border: `2px solid ${item.border}`,
-                        borderRadius: 1
-                      }} />
-                      <Typography variant="body2" sx={{ color: item.textColor, fontWeight: 500 }}>
-                        {item.label}
-                      </Typography>
-                    </Box>
-                  ))}
-                </Box>
               </CardContent>
             </Card>
           </Grid>
@@ -796,45 +744,45 @@ const TicketBooking = () => {
               backdropFilter: 'blur(10px)',
               border: `1px solid ${alpha('#FFD700', 0.2)}`
             }}>
-              <CardContent sx={{ p: 3 }}>
-                <Typography variant="h6" sx={{ color: '#FFD700', mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
+              <CardContent sx={{ p: 2 }}>
+                <Typography variant="h6" sx={{ color: '#FFD700', mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
                   <ConfirmationNumber />
                   Booking Summary
                 </Typography>
 
-                <Divider sx={{ my: 2, borderColor: alpha('#FFD700', 0.2) }} />
+                <Divider sx={{ my: 1.5, borderColor: alpha('#FFD700', 0.2) }} />
 
-                <Box sx={{ mb: 3 }}>
-                  <Typography variant="body1" sx={{ color: alpha('#fff', 0.7), mb: 1 }}>
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="body2" sx={{ color: alpha('#fff', 0.7), mb: 0.5 }}>
                     Selected Seats: <span style={{ color: '#FFD700', fontWeight: 600 }}>{selectedSeats.length}</span>
                   </Typography>
                   {selectedSeats.length > 0 && (
-                    <Typography variant="body2" sx={{ color: alpha('#fff', 0.8) }}>
+                    <Typography variant="caption" sx={{ color: alpha('#fff', 0.8) }}>
                       {selectedSeats.join(', ')}
                     </Typography>
                   )}
                 </Box>
 
-                <Box sx={{ mb: 3 }}>
-                  <Typography variant="body1" sx={{ color: alpha('#fff', 0.7), mb: 1 }}>
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="body2" sx={{ color: alpha('#fff', 0.7), mb: 0.5 }}>
                     Date: <span style={{ color: '#FFD700', fontWeight: 600 }}>
                       {selectedDate ? new Date(selectedDate).toLocaleDateString() : 'Not selected'}
                     </span>
                   </Typography>
-                  <Typography variant="body1" sx={{ color: alpha('#fff', 0.7) }}>
+                  <Typography variant="body2" sx={{ color: alpha('#fff', 0.7) }}>
                     Time: <span style={{ color: '#FFD700', fontWeight: 600 }}>
                       {selectedTime || 'Not selected'}
                     </span>
                   </Typography>
                 </Box>
 
-                <Divider sx={{ my: 2, borderColor: alpha('#FFD700', 0.2) }} />
+                <Divider sx={{ my: 1.5, borderColor: alpha('#FFD700', 0.2) }} />
 
-                <Box sx={{ mb: 3 }}>
-                  <Typography variant="h6" sx={{ color: '#FFD700', mb: 1 }}>
-                    Total Amount: ₹{calculateTotalPrice()}
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="h6" sx={{ color: '#FFD700', mb: 0.5 }}>
+                    Total: ₹{calculateTotalPrice()}
                   </Typography>
-                  <Typography variant="body2" sx={{ color: alpha('#fff', 0.6) }}>
+                  <Typography variant="caption" sx={{ color: alpha('#fff', 0.6) }}>
                     {getPricingBreakdown()}
                   </Typography>
                 </Box>
@@ -851,11 +799,11 @@ const TicketBooking = () => {
                     />
                   }
                   label={
-                    <Typography variant="body2" sx={{ color: alpha('#fff', 0.8) }}>
-                      I confirm arrival 1 hour early and agree to make payment to confirm booking
+                    <Typography variant="caption" sx={{ color: alpha('#fff', 0.8) }}>
+                      I confirm arrival 1 hour early and agree to terms
                     </Typography>
                   }
-                  sx={{ mb: 3 }}
+                  sx={{ mb: 2 }}
                 />
 
                 <Button 
@@ -873,13 +821,13 @@ const TicketBooking = () => {
                     letterSpacing: '1px',
                     py: 1.5,
                     borderRadius: 2,
-                    fontSize: '1rem',
-                    boxShadow: `0 6px 20px ${alpha('#FFD700', 0.4)}`,
+                    fontSize: '0.9rem',
+                    boxShadow: `0 4px 15px ${alpha('#FFD700', 0.4)}`,
                     transition: 'all 0.3s ease',
                     '&:hover': {
                       background: 'linear-gradient(135deg, #FFE55C 0%, #FFB347 100%)',
                       transform: 'translateY(-2px)',
-                      boxShadow: `0 8px 25px ${alpha('#FFD700', 0.6)}`,
+                      boxShadow: `0 6px 20px ${alpha('#FFD700', 0.6)}`,
                     },
                     '&:disabled': {
                       background: alpha('#666', 0.3),
@@ -889,13 +837,13 @@ const TicketBooking = () => {
                     }
                   }}
                 >
-                  Confirm Premium Booking
+                  Confirm Booking
                 </Button>
 
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 2, gap: 1 }}>
-                  <Security sx={{ color: alpha('#fff', 0.5), fontSize: '1rem' }} />
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 1.5, gap: 0.5 }}>
+                  <Security sx={{ color: alpha('#fff', 0.5), fontSize: '0.9rem' }} />
                   <Typography variant="caption" sx={{ color: alpha('#fff', 0.5) }}>
-                    Secure payment protected by 256-bit SSL
+                    Secure payment protected
                   </Typography>
                 </Box>
               </CardContent>
