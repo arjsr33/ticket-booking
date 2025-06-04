@@ -39,13 +39,23 @@ const MovieDetails = () => {
       return;
     }
 
-    dispatch(fetchMovie(id));
+    if (id) {
+      dispatch(fetchMovie(id));
+    }
 
     // Clear the current movie when the component unmounts
     return () => {
       dispatch(clearCurrentMovie());
     };
   }, [dispatch, id, isAuthenticated, navigate]);
+
+  const handleBookTickets = () => {
+    if (!movie || !movie._id) {
+      console.error('Movie not loaded or missing ID');
+      return;
+    }
+    navigate(`/book/${movie._id}`);
+  };
 
   if (!isAuthenticated) return null; // Prevent rendering while redirecting
 
@@ -170,7 +180,7 @@ const MovieDetails = () => {
               <Box sx={{ position: 'relative' }}>
                 <Box
                   component="img"
-                  src={movie.images.poster}
+                  src={movie.images?.poster || '/placeholder-movie.jpg'}
                   alt={movie.title}
                   sx={{
                     width: '100%',
@@ -258,7 +268,7 @@ const MovieDetails = () => {
                   fullWidth
                   size="large"
                   startIcon={<PlayArrow />}
-                  onClick={() => navigate(`/book/${movie._id}`)}
+                  onClick={handleBookTickets}
                   sx={{
                     background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)',
                     color: '#000',
@@ -426,7 +436,7 @@ const MovieDetails = () => {
                         Cast
                       </Typography>
                       <List dense>
-                        {movie.cast.map((actor, index) => (
+                        {movie.cast?.map((actor, index) => (
                           <ListItem key={index} sx={{ px: 0, py: 0.5 }}>
                             <ListItemIcon sx={{ minWidth: 24 }}>
                               <Box 
@@ -448,7 +458,11 @@ const MovieDetails = () => {
                               }} 
                             />
                           </ListItem>
-                        ))}
+                        )) || (
+                          <Typography variant="body2" sx={{ color: alpha('#fff', 0.6), fontStyle: 'italic' }}>
+                            Cast information not available
+                          </Typography>
+                        )}
                       </List>
                     </CardContent>
                   </Card>
@@ -651,7 +665,7 @@ const MovieDetails = () => {
                     size="large"
                     fullWidth
                     startIcon={<CalendarToday />}
-                    onClick={() => navigate(`/book/${movie._id}`)}
+                    onClick={handleBookTickets}
                     sx={{
                       background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)',
                       color: '#000',
