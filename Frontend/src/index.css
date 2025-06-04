@@ -1,11 +1,10 @@
+/* Import premium fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  /* color-scheme: light dark; */
-  /* color: rgba(255, 255, 255, 0.87); */
-  /* background-color: #242424; */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,62 +12,301 @@
   -moz-osx-font-smoothing: grayscale;
   caret-color: transparent;
 
+  /* Custom CSS Variables for Premium Theme */
+  --primary-gradient: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  --secondary-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  --glass-background: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --shadow-premium: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #0a0a0a;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  /* display: flex; */
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background: linear-gradient(135deg, 
+    #0a0a0a 0%, 
+    #1a1a2e 25%, 
+    #16213e 50%, 
+    #1a1a2e 75%, 
+    #0a0a0a 100%);
+  background-attachment: fixed;
+  color: #ffffff;
+  overflow-x: hidden;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+#root {
+  min-height: 100vh;
+  width: 100%;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+/* Enhanced scrollbar styling */
+::-webkit-scrollbar {
+  width: 12px;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+::-webkit-scrollbar-track {
+  background: rgba(26, 26, 46, 0.3);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  border-radius: 6px;
+  border: 2px solid rgba(26, 26, 46, 0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #FFE55C 0%, #FFB347 100%);
+}
+
+/* Smooth animations for all elements */
+* {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Custom button animations */
+.metallic-button {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.metallic-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+  z-index: -1;
+}
+
+.metallic-button:hover::before {
+  left: 100%;
+}
+
+/* Glass morphism effect for cards */
+.glass-card {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Premium loading animation */
+@keyframes premium-glow {
+  0%, 100% {
+    text-shadow: 0 0 5px #FFD700, 0 0 10px #FFD700, 0 0 15px #FFD700;
   }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+  50% {
+    text-shadow: 0 0 10px #FFA500, 0 0 20px #FFA500, 0 0 30px #FFA500;
   }
 }
-/* Temporary test - remove after confirming */
-.MuiContainer-root {
-  max-width: 100% !important;
+
+.premium-glow {
+  animation: premium-glow 2s ease-in-out infinite;
+}
+
+/* Premium card hover effects */
+@keyframes card-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.floating-card {
+  animation: card-float 3s ease-in-out infinite;
+}
+
+/* Enhanced focus styles for accessibility */
+.MuiButton-root:focus-visible,
+.MuiIconButton-root:focus-visible,
+.MuiTextField-root:focus-within {
+  outline: 2px solid #FFD700 !important;
+  outline-offset: 2px !important;
+}
+
+/* Custom MUI component overrides */
+.MuiPaper-root {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.MuiDialog-paper {
+  background: linear-gradient(135deg, 
+    rgba(26, 26, 46, 0.95) 0%, 
+    rgba(22, 33, 62, 0.95) 100%) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.MuiTextField-root .MuiOutlinedInput-root {
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.MuiTextField-root .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(255, 215, 0, 0.5) !important;
+}
+
+.MuiTextField-root .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #FFD700 !important;
+  border-width: 2px !important;
+}
+
+/* Table styling for admin pages */
+.MuiTableContainer-root {
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px !important;
+}
+
+.MuiTableHead-root {
+  background: linear-gradient(135deg, 
+    rgba(255, 215, 0, 0.1) 0%, 
+    rgba(255, 165, 0, 0.1) 100%) !important;
+}
+
+.MuiTableCell-head {
+  color: #FFD700 !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  border-bottom: 2px solid rgba(255, 215, 0, 0.3) !important;
+}
+
+.MuiTableCell-body {
+  color: rgba(255, 255, 255, 0.9) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.MuiTableRow-root:hover {
+  background: rgba(255, 215, 0, 0.05) !important;
+}
+
+/* Snackbar styling */
+.MuiSnackbar-root .MuiAlert-root {
+  background: rgba(26, 26, 46, 0.95) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+  color: white !important;
+}
+
+.MuiAlert-standardSuccess {
+  background: linear-gradient(135deg, 
+    rgba(76, 175, 80, 0.9) 0%, 
+    rgba(56, 142, 60, 0.9) 100%) !important;
+}
+
+.MuiAlert-standardError {
+  background: linear-gradient(135deg, 
+    rgba(244, 67, 54, 0.9) 0%, 
+    rgba(211, 47, 47, 0.9) 100%) !important;
+}
+
+/* Menu styling */
+.MuiMenu-paper {
+  background: linear-gradient(135deg, 
+    rgba(26, 26, 46, 0.95) 0%, 
+    rgba(22, 33, 62, 0.95) 100%) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+}
+
+.MuiMenuItem-root {
+  color: white !important;
+  transition: all 0.3s ease !important;
+}
+
+.MuiMenuItem-root:hover {
+  background: rgba(255, 215, 0, 0.1) !important;
+  color: #FFD700 !important;
+}
+
+/* Chip styling */
+.MuiChip-root {
+  backdrop-filter: blur(10px) !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease !important;
+}
+
+.MuiChip-root:hover {
+  transform: scale(1.05) !important;
+}
+
+/* Rating styling */
+.MuiRating-root {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)) !important;
+}
+
+/* Selection styling */
+::selection {
+  background: rgba(255, 215, 0, 0.3);
+  color: white;
+}
+
+::-moz-selection {
+  background: rgba(255, 215, 0, 0.3);
+  color: white;
+}
+
+/* Responsive design enhancements */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+  
+  .MuiContainer-root {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  
+  .MuiCard-root {
+    margin-bottom: 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .MuiToolbar-root {
+    min-height: 56px !important;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+  
+  .MuiButton-root {
+    padding: 6px 12px !important;
+    font-size: 0.8rem !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .MuiAppBar-root {
+    display: none !important;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
 }
