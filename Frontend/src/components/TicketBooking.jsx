@@ -146,65 +146,72 @@ const TicketBooking = () => {
     const isSelected = selectedSeats.includes(seatLabel);
 
     return (
-      <Grid item key={seatLabel}>
-        <Paper
-          elevation={isSelected ? 8 : 2}
-          sx={{
-            width: 32,
-            height: 32,
-            bgcolor: 
-              isBooked ? alpha('#666', 0.8) :
-              isSelected ? '#FFD700' : alpha('#fff', 0.1),
-            border: `2px solid ${
-              isBooked ? alpha('#444', 0.8) :
-              isSelected ? '#FFA500' : alpha('#fff', 0.2)
-            }`,
-            cursor: isBooked ? 'not-allowed' : 'pointer',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: 2,
-            backdropFilter: 'blur(10px)',
-            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-            position: 'relative',
-            '&:hover': !isBooked ? {
-              bgcolor: isSelected ? '#FFE55C' : alpha('#FFD700', 0.3),
-              transform: 'scale(1.1)',
-              boxShadow: `0 4px 12px ${alpha('#FFD700', 0.4)}`,
-            } : {},
-            '&::before': {
-              content: '""',
-              position: 'absolute',
-              top: -2,
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: 6,
-              height: 6,
-              borderRadius: '50%',
-              bgcolor: isSelected ? '#FFA500' : 'transparent',
-              transition: 'all 0.3s ease',
-            }
+      <Paper
+        key={seatLabel}
+        elevation={isSelected ? 8 : 2}
+        sx={{
+          width: 32,
+          height: 32,
+          bgcolor: 
+            isBooked ? alpha('#666', 0.8) :
+            isSelected ? '#FFD700' : alpha('#fff', 0.1),
+          border: `2px solid ${
+            isBooked ? alpha('#444', 0.8) :
+            isSelected ? '#FFA500' : alpha('#fff', 0.2)
+          }`,
+          cursor: isBooked ? 'not-allowed' : 'pointer',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderRadius: 2,
+          backdropFilter: 'blur(10px)',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          position: 'relative',
+          flexShrink: 0,
+          '&:hover': !isBooked ? {
+            bgcolor: isSelected ? '#FFE55C' : alpha('#FFD700', 0.3),
+            transform: 'scale(1.1)',
+            boxShadow: `0 4px 12px ${alpha('#FFD700', 0.4)}`,
+          } : {},
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: -2,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: 6,
+            height: 6,
+            borderRadius: '50%',
+            bgcolor: isSelected ? '#FFA500' : 'transparent',
+            transition: 'all 0.3s ease',
+          }
+        }}
+        onClick={() => handleSeatClick(seatLabel)}
+      >
+        <Typography 
+          variant="caption" 
+          sx={{ 
+            color: isBooked ? alpha('#fff', 0.5) : 
+                   isSelected ? '#000' : alpha('#fff', 0.8),
+            fontWeight: 600,
+            fontSize: '0.7rem'
           }}
-          onClick={() => handleSeatClick(seatLabel)}
         >
-          <Typography 
-            variant="caption" 
-            sx={{ 
-              color: isBooked ? alpha('#fff', 0.5) : 
-                     isSelected ? '#000' : alpha('#fff', 0.8),
-              fontWeight: 600,
-              fontSize: '0.7rem'
-            }}
-          >
-            {seatNumber}
-          </Typography>
-        </Paper>
-      </Grid>
+          {seatNumber}
+        </Typography>
+      </Paper>
     );
   };
 
   const renderRow = (row) => (
-    <Box key={row} sx={{ display: 'flex', alignItems: 'center', mb: 2, gap: 2 }}>
+    <Box key={row} sx={{ 
+      display: 'flex', 
+      alignItems: 'center', 
+      mb: 2, 
+      gap: 2,
+      justifyContent: 'center',
+      width: '100%'
+    }}>
       <Typography 
         sx={{ 
           width: 32, 
@@ -212,18 +219,26 @@ const TicketBooking = () => {
           color: '#FFD700',
           fontWeight: 700,
           fontSize: '1.1rem',
-          textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+          textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+          flexShrink: 0
         }}
       >
         {row}
       </Typography>
-      <Grid container spacing={1} sx={{ maxWidth: 'calc(100% - 48px)' }}>
+      <Box sx={{ 
+        display: 'flex',
+        gap: 1,
+        justifyContent: 'center',
+        flexWrap: 'wrap',
+        maxWidth: '600px',
+        width: '100%'
+      }}>
         {Array.from({ length: 15 }, (_, i) => {
           const seatNumber = i + 1;
           const seatLabel = `${row}${seatNumber.toString().padStart(2, '0')}`;
           return renderSeat(seatLabel, seatNumber);
         })}
-      </Grid>
+      </Box>
     </Box>
   );
 
@@ -242,53 +257,106 @@ const TicketBooking = () => {
         border: `1px solid ${alpha('#fff', 0.1)}`,
         backdropFilter: 'blur(10px)'
       }}>
-        {/* Screen */}
+        {/* Screen - Centered and sized to match seat width */}
         <Box sx={{ 
           mb: 4, 
-          p: 2, 
+          p: 3, 
           background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)',
-          borderRadius: 2,
-          boxShadow: `0 4px 20px ${alpha('#FFD700', 0.5)}`,
-          position: 'relative'
+          borderRadius: 3,
+          boxShadow: `0 8px 32px ${alpha('#FFD700', 0.6)}`,
+          position: 'relative',
+          width: '80%',
+          maxWidth: '600px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '60px'
         }}>
           <Typography 
-            variant="h6" 
+            variant="h5" 
             sx={{ 
               color: '#000', 
               fontWeight: 700,
               textAlign: 'center',
-              letterSpacing: '1px'
+              letterSpacing: '2px',
+              textShadow: '0 2px 4px rgba(0,0,0,0.2)'
             }}
           >
-            🎬 PREMIUM SCREEN 🎬
+            🎬 SCREEN 🎬
           </Typography>
+          
+          {/* Screen reflection effect */}
           <Box sx={{
             position: 'absolute',
-            bottom: -8,
+            bottom: -12,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '90%',
+            height: '8px',
+            background: `linear-gradient(135deg, ${alpha('#FFD700', 0.3)} 0%, ${alpha('#FFA500', 0.1)} 100%)`,
+            borderRadius: '50%',
+            filter: 'blur(4px)'
+          }} />
+          
+          {/* Screen pointer */}
+          <Box sx={{
+            position: 'absolute',
+            bottom: -16,
             left: '50%',
             transform: 'translateX(-50%)',
             width: 0,
             height: 0,
-            borderLeft: '8px solid transparent',
-            borderRight: '8px solid transparent',
-            borderTop: '8px solid #FFA500',
+            borderLeft: '12px solid transparent',
+            borderRight: '12px solid transparent',
+            borderTop: '12px solid #FFA500',
+            filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'
           }} />
         </Box>
 
-        {/* Premium Section (Top 3 rows) */}
-        <Box sx={{ mb: 4, p: 2, borderRadius: 2, border: `2px solid ${alpha('#FFD700', 0.3)}`, width: '100%' }}>
-          <Typography variant="subtitle1" sx={{ color: '#FFD700', fontWeight: 700, mb: 2, textAlign: 'center' }}>
-            🌟 PREMIUM SECTION 🌟
-          </Typography>
-          {rows.slice(0, 3).split('').map((row) => renderRow(row))}
-        </Box>
+        {/* Seats Container - Centered to align with screen */}
+        <Box sx={{ 
+          width: '100%', 
+          maxWidth: '900px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
+        }}>
+          {/* Premium Section (Top 3 rows) */}
+          <Box sx={{ 
+            mb: 4, 
+            p: 3, 
+            borderRadius: 3, 
+            border: `2px solid ${alpha('#FFD700', 0.4)}`,
+            background: `linear-gradient(135deg, ${alpha('#FFD700', 0.05)} 0%, ${alpha('#FFA500', 0.02)} 100%)`,
+            width: '100%',
+            backdropFilter: 'blur(5px)'
+          }}>
+            <Typography variant="h6" sx={{ 
+              color: '#FFD700', 
+              fontWeight: 700, 
+              mb: 3, 
+              textAlign: 'center',
+              letterSpacing: '1px',
+              textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+            }}>
+              🌟 PREMIUM SECTION 🌟
+            </Typography>
+            {rows.slice(0, 3).split('').map((row) => renderRow(row))}
+          </Box>
 
-        {/* Standard Section (Remaining rows) */}
-        <Box sx={{ width: '100%' }}>
-          <Typography variant="subtitle1" sx={{ color: alpha('#fff', 0.7), fontWeight: 600, mb: 2, textAlign: 'center' }}>
-            STANDARD SECTION
-          </Typography>
-          {rows.slice(3).split('').map((row) => renderRow(row))}
+          {/* Standard Section (Remaining rows) */}
+          <Box sx={{ width: '100%' }}>
+            <Typography variant="h6" sx={{ 
+              color: alpha('#fff', 0.7), 
+              fontWeight: 600, 
+              mb: 3, 
+              textAlign: 'center',
+              letterSpacing: '1px'
+            }}>
+              STANDARD SECTION
+            </Typography>
+            {rows.slice(3).split('').map((row) => renderRow(row))}
+          </Box>
         </Box>
       </Box>
     );
